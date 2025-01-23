@@ -9,21 +9,27 @@ client_article = Blueprint('client_article', __name__,
                         template_folder='templates')
 
 @client_article.route('/client/index')
+
 @client_article.route('/client/article/show')              # remplace /client
 def client_article_show():                                 # remplace client_index
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   selection des articles   '''
+    sql = '''   SELECT * FROM parfum  '''
+    mycursor.execute(sql,[])
+
     list_param = []
     condition_and = ""
     # utilisation du filtre
     sql3=''' prise en compte des commentaires et des notes dans le SQL    '''
-    articles =[]
+    articles = mycursor.fetchall()
 
+    sql1 = ''' SELECT * FROM genre '''
+    mycursor.execute(sql1,list_param)
 
     # pour le filtre
-    types_article = []
+    types_article = mycursor.fetchall()
+
 
 
     articles_panier = []
