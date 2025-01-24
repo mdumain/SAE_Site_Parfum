@@ -63,6 +63,7 @@ CREATE TABLE ligne_panier(
     id_parfum INT,
     quantite INT,
     date_ajout DATE,
+    PRIMARY KEY (id_utilisateur,id_parfum,date_ajout),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur),
     FOREIGN KEY (id_parfum) REFERENCES parfum(id_parfum)
 );
@@ -83,7 +84,7 @@ CREATE TABLE genre(
 );
 
 CREATE TABLE parfum(
-    id_parfum INT AUTO_INCREMENT PRIMARY KEY,
+    id_parfum INT AUTO_INCREMENT PRIMARY KEY ,
     nom_parfum VARCHAR(50),
     prix_parfum DECIMAL(10,2),
     conditionnement_id INT,
