@@ -14,17 +14,17 @@ client_commentaire = Blueprint('client_commentaire', __name__,
 @client_commentaire.route('/client/article/details', methods=['GET'])
 def client_article_details():
     mycursor = get_db().cursor()
-    id_article =  request.args.get('id_article', None)
+    id_article =  request.args.get('id_parfum', None)
     id_client = session['id_user']
 
     ## partie 4
     # client_historique_add(id_article, id_client)
 
     sql = '''
+    SELECT * FROM parfum WHERE id_parfum = %s
     '''
-    #mycursor.execute(sql, id_article)
-    #article = mycursor.fetchone()
-    article=[]
+    mycursor.execute(sql, id_article)
+    article = mycursor.fetchone()
     commandes_articles=[]
     nb_commentaires=[]
     if article is None:
