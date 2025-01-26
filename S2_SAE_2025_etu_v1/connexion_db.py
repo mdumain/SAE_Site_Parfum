@@ -9,8 +9,8 @@ def get_db():
         db = g._database = pymysql.connect(
             host="localhost",
             # host="serveurmysql",
-            user="root",
-            password="mathias",
+            user="admin",
+            password="mdp1",
             database="SAE",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
@@ -38,8 +38,10 @@ def activate_db_options(db):
     if result:
         if result['Value'] != '0':
             print('MYSQL : valeur de la variable globale lower_case_table_names differente de 0')   # mettre en commentaire
+            """
             cursor.execute("SET GLOBAL lower_case_table_names = 0")
             db.commit()
+            """
         else :
             print('MYSQL : variable globale lower_case_table_names=0  ok')    # mettre en commentaire
     cursor.close()
