@@ -33,7 +33,9 @@ def client_article_show():                                 # remplace client_ind
 
 
     articles_panier = []
-
+    sql = '''SELECT * FROM ligne_panier'''
+    mycursor.execute(sql,list_param)
+    articles_panier = mycursor.fetchall()
 
 
     if len(articles_panier) >= 1:

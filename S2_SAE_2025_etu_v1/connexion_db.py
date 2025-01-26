@@ -9,9 +9,15 @@ def get_db():
         db = g._database = pymysql.connect(
             host="sae345g14.mysql.pythonanywhere-services.com",
             # host="serveurmysql",
+<<<<<<< HEAD
             user="sae345g14",
             password="Lesbgs2025",
             database="sae345g14$default",
+=======
+            user="admin",
+            password="mdp1",
+            database="SAE",
+>>>>>>> b84e49fcdf3226c52b6764c62a9e6e54e2aa98ff
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )

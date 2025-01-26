@@ -13,7 +13,7 @@ client_panier = Blueprint('client_panier', __name__,
 def client_panier_add():
     mycursor = get_db().cursor()
     id_client = session['id_user']
-    id_article = request.form.get('id_article')
+    id_article = request.form.get('id_parfum')
     quantite = request.form.get('quantite')
     # ---------
     #id_declinaison_article=request.form.get('id_declinaison_article',None)
@@ -37,6 +37,21 @@ def client_panier_add():
     #                                , article=article)
 
 # ajout dans le panier d'un article
+    sql = '''SELECT * FROM ligne_panier WHERE parfum_id = %s AND id_utilisateur'''
+    mycursor.execute(sql,(id_article,id_client))
+    article_panier = mycursor.fetchone()
+    if not (article_panier is None) and article_panier['quantite'] >=1 :
+        tuple_update = (quantite, id_client,id_article)
+        sql = '''UPDATE ligne_panier SET quantite = quantote+%s WHERE id_utilisateur = %s AND parfum_id=%s'''
+        mycursor.execute(sql,tuple_update)
+
+    else:
+        tuple_insert = (id_client,id_article,quantite)
+        sql = '''INSERT INTO ligne_panier(utilisateur_id,parfum_id,quantite, date_ajout) VALUES (%s,%s,%s, current_timestamp)'''
+        mycursor.execute(sql,tuple_insert)
+
+
+    get_db().commit()
 
 
     return redirect('/client/article/show')
