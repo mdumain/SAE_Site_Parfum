@@ -38,10 +38,8 @@ def activate_db_options(db):
     if result:
         if result['Value'] != '0':
             print('MYSQL : valeur de la variable globale lower_case_table_names differente de 0')   # mettre en commentaire
-            """
             cursor.execute("SET GLOBAL lower_case_table_names = 0")
             db.commit()
-            """
         else :
             print('MYSQL : variable globale lower_case_table_names=0  ok')    # mettre en commentaire
     cursor.close()
