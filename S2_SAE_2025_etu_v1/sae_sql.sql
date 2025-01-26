@@ -146,7 +146,6 @@ INSERT INTO marque VALUES
     (17, 'Birkholz');
 
 INSERT INTO parfum VALUES
-<<<<<<< HEAD
                        (NULL, 'Spider-Man', 10, 1, 3, 1, 1, 1, 'Un parfum dynamique et énergisant, inspiré par l\'agilité et l\'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois.', 'spiderman.jpg'),
                        (NULL, 'Pat\' Patrouille', 10, 1, 1, 1, 1, 1, 'Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre.', 'patpatrouille.jpg'),
                        (NULL, 'Barbaparfum', 15, 1, 3, 3, 9, 1, 'Un parfum doux et réconfortant, inspiré par l\'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc.', 'barbaparfum.jpg'),
@@ -172,7 +171,6 @@ INSERT INTO parfum VALUES
                        (NULL, 'Aventus', 300, 1, 8, 1, 9, 2, 'Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d\'ananas, de bouleau et de musc.', 'aventus.jpg'),
                        (NULL, 'Green Tea', 30, 1, 4, 3, 16, 3, 'Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.', 'green_tea.jpg'),
                        (NULL, 'Citrus Splash', 25, 1, 4, 3, 17, 3, 'Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.', 'citrus_splash.jpg');
-=======
                        (NULL, 'Spider-Man', 10, 1, 3, 1, 1, 1, 'Un parfum dynamique et énergisant, inspiré par l\'agilité et l\'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois.', 'spiderman.jpg', 38),
                        (NULL, 'Pat\' Patrouille', 10, 1, 1, 1, 1, 1, 'Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre.', 'patpatrouille.jpg', 103),
                        (NULL, 'Barbaparfum', 15, 1, 3, 3, 9, 1, 'Un parfum doux et réconfortant, inspiré par l\'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc.', 'barbaparfum.jpg', 403),
@@ -198,7 +196,6 @@ INSERT INTO parfum VALUES
                        (NULL, 'Aventus', 300, 1, 8, 1, 9, 2, 'Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d\'ananas, de bouleau et de musc.', 'aventus.jpg', 84),
                        (NULL, 'Green Tea', 30, 1, 4, 3, 16, 3, 'Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.', 'green_tea.jpg', 73),
                        (NULL, 'Citrus Splash', 25, 1, 4, 3, 17, 3, 'Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.', 'citrus_splash.jpg', 92);
->>>>>>> a0bcf1887b5f22c1e3fc6aa1a90bcc8d1a1227d0
 
 INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
 (1,'admin','admin@admin.fr',
