@@ -74,6 +74,7 @@ CREATE TABLE parfum(
     fournisseur_id INT,
     description VARCHAR(1000),
     image VARCHAR(50),
+    quantite INT,
     CONSTRAINT fk_parfum_marque FOREIGN KEY (marque_id) REFERENCES marque(id_marque),
     CONSTRAINT fk_parfum_fournisseur FOREIGN KEY (fournisseur_id) REFERENCES fournisseur(id_fournisseur),
     CONSTRAINT fk_parfum_conditionnement FOREIGN KEY (conditionnement_id) REFERENCES conditionnement(id_conditionnement),
@@ -145,31 +146,31 @@ INSERT INTO marque VALUES
     (17, 'Birkholz');
 
 INSERT INTO parfum VALUES
-                       (NULL, 'Spider-Man', 10, 1, 3, 1, 1, 1, 'Un parfum dynamique et énergisant, inspiré par l\'agilité et l\'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois.', 'spiderman.jpg'),
-                       (NULL, 'Pat\' Patrouille', 10, 1, 1, 1, 1, 1, 'Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre.', 'patpatrouille.jpg'),
-                       (NULL, 'Barbaparfum', 15, 1, 3, 3, 9, 1, 'Un parfum doux et réconfortant, inspiré par l\'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc.', 'barbaparfum.jpg'),
-                       (NULL, 'Barbie', 5, 1, 1, 2, 1, 1, 'Un parfum féminin et glamour, capturant l\'essence de Barbie. Notes de fleurs roses, de framboise et de vanille.', 'barbie.jpg'),
-                       (NULL, 'Sauvage', 60, 2, 4, 1, 2, 2, 'Un parfum sauvage et intense, pour l\'homme moderne et audacieux. Notes de bergamote, de poivre et d\'ambroxan.', 'sauvage.jpg'),
-                       (NULL, 'Invictus', 95, 1, 4, 1, 8, 2, 'Un parfum victorieux et puissant, pour ceux qui repoussent les limites. Notes de pamplemousse, de laurier et de bois ambré.', 'invictus.jpg'),
-                       (NULL, 'Flora Gorgeous Magnolia', 170, 1, 4, 2, 3, 2, 'Un parfum floral et élégant, inspiré par la beauté éclatante du magnolia. Notes de magnolia, de jasmin et de bois de santal.', 'gucci.jpg'),
-                       (NULL, 'Spicebomb', 90, 1, 2, 1, 10, 3, 'Un parfum explosif et épicé, pour les hommes qui osent. Notes de piment, de tabac et de cuir.', 'spicebomb.jpg'),
-                       (NULL, 'Born in Roma Uomo', 60, 1, 3, 1, 11, 3, 'Un parfum italien sophistiqué, capturant l\'esprit de Rome. Notes de lavande, de géranium et de bois de vétiver.', 'valentino.jpg'),
-                       (NULL, 'Coco Mademoiselle', 90, 1, 1, 2, 4, 2, 'Un parfum intemporel et féminin, pour la femme moderne. Notes de rose, de patchouli et de vanille.', 'coco_mademoiselle.jpg'),
-                       (NULL, 'The Most Wanted', 54, 1, 2, 1, 12, 3, 'Un parfum audacieux et séduisant, pour les hommes qui attirent tous les regards. Notes de cardamome, de bois précieux et d\'ambre.', 'mostwanted.jpg'),
-                       (NULL, 'Black Opium', 74, 1, 2, 2, 5, 2, 'Un parfum addictif et mystérieux, pour les femmes qui aiment briller dans l\'ombre. Notes de café, de vanille et de fleurs blanches.', 'black_opium.jpg'),
-                       (NULL, 'Le Beau', 104.99, 1, 5, 1, 6, 2, 'Un parfum frais et ensoleillé, pour l\'homme moderne et élégant. Notes de noix de coco, de bergamote et de bois de cèdre.', 'le_beau.jpg'),
-                       (NULL, 'Ombre Leather', 116, 1, 2, 1, 7, 2, 'Un parfum sombre et sensuel, inspiré par le cuir et les ombres mystérieuses. Notes de cuir, de violette et de patchouli.', 'ombre_leather.jpg'),
-                       (NULL, '1 Million', 106.89, 1, 6, 1, 8, 2, 'Un parfum luxueux et audacieux, pour ceux qui vivent sans limites. Notes de sangria, de rose et de cuir.', '1_million.jpg'),
-                       (NULL, 'J\'adore', 120, 2, 4, 2, 2, 2, 'Un parfum floral et ensoleillé, symbole de féminité et de grâce. Notes de jasmin, de rose et de ylang-ylang.', 'j_adore.jpg'),
-                       (NULL, 'Light Blue', 85, 1, 2, 3, 14, 2, 'Un parfum frais et lumineux, inspiré par la Méditerranée. Notes de citron, de pomme et de cèdre.', 'light_blue.jpg'),
-                       (NULL, 'La Vie Est Belle', 160, 1, 7, 2, 13, 2, 'Un parfum gourmand et optimiste, célébrant le bonheur de vivre. Notes de patchouli, d\'iris et de vanille.', 'la_vie_est_belle.jpg'),
-                       (NULL, 'Acqua di Gio', 95, 1, 4, 1, 5, 2, 'Un parfum aquatique et rafraîchissant, inspiré par la mer Méditerranée. Notes de bergamote, de jasmin et de bois de santal.', 'acqua_di_gio.jpg'),
-                       (NULL, 'Le Male', 100, 1, 5, 1, 6, 2, 'Un parfum iconique et viril, pour l\'homme moderne et séduisant. Notes de lavande, de vanille et de menthe.', 'le_male.jpg'),
-                       (NULL, 'Black Orchid', 150, 1, 6, 2, 7, 2, 'Un parfum intense et mystérieux, pour les femmes qui osent être différentes. Notes de truffe, d\'orchidée noire et de patchouli.', 'black_orchid.jpg'),
-                       (NULL, 'Good Girl', 110, 1, 4, 2, 15, 2, 'Un parfum audacieux et sensuel, pour la femme qui sait ce qu\'elle veut. Notes de café, de tubéreuse et de vanille.', 'good_girl.jpg'),
-                       (NULL, 'Aventus', 300, 1, 8, 1, 9, 2, 'Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d\'ananas, de bouleau et de musc.', 'aventus.jpg'),
-                       (NULL, 'Green Tea', 30, 1, 4, 3, 16, 3, 'Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.', 'green_tea.jpg'),
-                       (NULL, 'Citrus Splash', 25, 1, 4, 3, 17, 3, 'Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.', 'citrus_splash.jpg');
+                       (NULL, 'Spider-Man', 10, 1, 3, 1, 1, 1, 'Un parfum dynamique et énergisant, inspiré par l\'agilité et l\'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois.', 'spiderman.jpg', 38),
+                       (NULL, 'Pat\' Patrouille', 10, 1, 1, 1, 1, 1, 'Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre.', 'patpatrouille.jpg', 103),
+                       (NULL, 'Barbaparfum', 15, 1, 3, 3, 9, 1, 'Un parfum doux et réconfortant, inspiré par l\'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc.', 'barbaparfum.jpg', 403),
+                       (NULL, 'Barbie', 5, 1, 1, 2, 1, 1, 'Un parfum féminin et glamour, capturant l\'essence de Barbie. Notes de fleurs roses, de framboise et de vanille.', 'barbie.jpg', 213),
+                       (NULL, 'Sauvage', 60, 2, 4, 1, 2, 2, 'Un parfum sauvage et intense, pour l\'homme moderne et audacieux. Notes de bergamote, de poivre et d\'ambroxan.', 'sauvage.jpg', 6),
+                       (NULL, 'Invictus', 95, 1, 4, 1, 8, 2, 'Un parfum victorieux et puissant, pour ceux qui repoussent les limites. Notes de pamplemousse, de laurier et de bois ambré.', 'invictus.jpg', 13),
+                       (NULL, 'Flora Gorgeous Magnolia', 170, 1, 4, 2, 3, 2, 'Un parfum floral et élégant, inspiré par la beauté éclatante du magnolia. Notes de magnolia, de jasmin et de bois de santal.', 'gucci.jpg', 243),
+                       (NULL, 'Spicebomb', 90, 1, 2, 1, 10, 3, 'Un parfum explosif et épicé, pour les hommes qui osent. Notes de piment, de tabac et de cuir.', 'spicebomb.jpg', 75),
+                       (NULL, 'Born in Roma Uomo', 60, 1, 3, 1, 11, 3, 'Un parfum italien sophistiqué, capturant l\'esprit de Rome. Notes de lavande, de géranium et de bois de vétiver.', 'valentino.jpg', 132),
+                       (NULL, 'Coco Mademoiselle', 90, 1, 1, 2, 4, 2, 'Un parfum intemporel et féminin, pour la femme moderne. Notes de rose, de patchouli et de vanille.', 'coco_mademoiselle.jpg', 123),
+                       (NULL, 'The Most Wanted', 54, 1, 2, 1, 12, 3, 'Un parfum audacieux et séduisant, pour les hommes qui attirent tous les regards. Notes de cardamome, de bois précieux et d\'ambre.', 'mostwanted.jpg', 167),
+                       (NULL, 'Black Opium', 74, 1, 2, 2, 5, 2, 'Un parfum addictif et mystérieux, pour les femmes qui aiment briller dans l\'ombre. Notes de café, de vanille et de fleurs blanches.', 'black_opium.jpg', 69),
+                       (NULL, 'Le Beau', 104.99, 1, 5, 1, 6, 2, 'Un parfum frais et ensoleillé, pour l\'homme moderne et élégant. Notes de noix de coco, de bergamote et de bois de cèdre.', 'le_beau.jpg', 59),
+                       (NULL, 'Ombre Leather', 116, 1, 2, 1, 7, 2, 'Un parfum sombre et sensuel, inspiré par le cuir et les ombres mystérieuses. Notes de cuir, de violette et de patchouli.', 'ombre_leather.jpg', 98),
+                       (NULL, '1 Million', 106.89, 1, 6, 1, 8, 2, 'Un parfum luxueux et audacieux, pour ceux qui vivent sans limites. Notes de sangria, de rose et de cuir.', '1_million.jpg', 43),
+                       (NULL, 'J\'adore', 120, 2, 4, 2, 2, 2, 'Un parfum floral et ensoleillé, symbole de féminité et de grâce. Notes de jasmin, de rose et de ylang-ylang.', 'j_adore.jpg', 47),
+                       (NULL, 'Light Blue', 85, 1, 2, 3, 14, 2, 'Un parfum frais et lumineux, inspiré par la Méditerranée. Notes de citron, de pomme et de cèdre.', 'light_blue.jpg', 65),
+                       (NULL, 'La Vie Est Belle', 160, 1, 7, 2, 13, 2, 'Un parfum gourmand et optimiste, célébrant le bonheur de vivre. Notes de patchouli, d\'iris et de vanille.', 'la_vie_est_belle.jpg', 86),
+                       (NULL, 'Acqua di Gio', 95, 1, 4, 1, 5, 2, 'Un parfum aquatique et rafraîchissant, inspiré par la mer Méditerranée. Notes de bergamote, de jasmin et de bois de santal.', 'acqua_di_gio.jpg', 82),
+                       (NULL, 'Le Male', 100, 1, 5, 1, 6, 2, 'Un parfum iconique et viril, pour l\'homme moderne et séduisant. Notes de lavande, de vanille et de menthe.', 'le_male.jpg', 97),
+                       (NULL, 'Black Orchid', 150, 1, 6, 2, 7, 2, 'Un parfum intense et mystérieux, pour les femmes qui osent être différentes. Notes de truffe, d\'orchidée noire et de patchouli.', 'black_orchid.jpg', 74),
+                       (NULL, 'Good Girl', 110, 1, 4, 2, 15, 2, 'Un parfum audacieux et sensuel, pour la femme qui sait ce qu\'elle veut. Notes de café, de tubéreuse et de vanille.', 'good_girl.jpg', 27),
+                       (NULL, 'Aventus', 300, 1, 8, 1, 9, 2, 'Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d\'ananas, de bouleau et de musc.', 'aventus.jpg', 84),
+                       (NULL, 'Green Tea', 30, 1, 4, 3, 16, 3, 'Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.', 'green_tea.jpg', 73),
+                       (NULL, 'Citrus Splash', 25, 1, 4, 3, 17, 3, 'Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.', 'citrus_splash.jpg', 92);
 
 INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
 (1,'admin','admin@admin.fr',
@@ -182,7 +183,7 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:1000000$qDAkJlUehmaARP1S$39044e949f63765b785007523adcde3d2ad9c2283d71e3ce5ffe58cbf8d86080',
     'ROLE_client','client2','1');
 
-SELECT parfum.id_parfum, parfum.nom_parfum, parfum.prix_parfum, conditionnement.libelle_conditionnement, volume.nom_volume, genre.libelle_genre, marque.nom_marque, fournisseur.nom_fournisseur, parfum.description, parfum.image
+SELECT parfum.id_parfum, parfum.nom_parfum, parfum.prix_parfum, conditionnement.libelle_conditionnement, volume.nom_volume, genre.libelle_genre, marque.nom_marque, fournisseur.nom_fournisseur, parfum.description, parfum.image, quantite
 FROM parfum JOIN conditionnement ON conditionnement_id = id_conditionnement
 JOIN fournisseur ON id_fournisseur = fournisseur_id
 JOIN genre ON id_genre = genre_id
