@@ -159,6 +159,7 @@ INSERT INTO etat VALUES (Null,"En attente"), (Null,"Expédié"), (Null,"Validé"
     sql = ''' 
         INSERT INTO parfum VALUES
                            (NULL, "Spider-Man", 10, 1, 3, 1, 1, 1, "Un parfum dynamique et énergisant, inspiré par l'agilité et l'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois.", "spiderman.jpg",84),
+                           (NULL, "Flash-McQueen",9.98, 1, 2, 1, 1, 1, "Un parfum te rendant aussi rapide que la lumière, insipré par la rapidité de Flash Mcqueen. Notes d'essence, et de transpiration", "flash.jpg",69),
                            (NULL, "Pat' Patrouille", 10, 1, 1, 1, 1, 1, "Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre.", "patpatrouille.jpg",97),
                            (NULL, "Barbaparfum", 15, 1, 3, 3, 9, 1, "Un parfum doux et réconfortant, inspiré par l'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc.", "barbaparfum.jpg",25),
                            (NULL, "Barbie", 5, 1, 1, 2, 1, 1, "Un parfum féminin et glamour, capturant l'essence de Barbie. Notes de fleurs roses, de framboise et de vanille.", "barbie.jpg",87),
