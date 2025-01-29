@@ -33,19 +33,25 @@ def client_article_show():                                 # remplace client_ind
 
 
     articles_panier = []
-    sql = '''SELECT * FROM ligne_panier'''
+    sql = '''SELECT * FROM ligne_panier JOIN parfum on ligne_panier.parfum_id = parfum.id_parfum'''
     mycursor.execute(sql,list_param)
     articles_panier = mycursor.fetchall()
 
 
     if len(articles_panier) >= 1:
-        sql = ''' calcul du prix total du panier '''
-        prix_total = None
+        sql = ''' 
+        SELECT SUM(prix_parfum * quantite) AS prix_total
+        FROM ligne_panier 
+            JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum 
+        WHERE utilisateur_id = %s 
+        '''
+        mycursor.execute(sql, (id_client))
+        prix_total = mycursor.fetchone()['prix_total']
     else:
         prix_total = None
     return render_template('client/boutique/panier_article.html'
                            , articles=articles
                            , articles_panier=articles_panier
-                           #, prix_total=prix_total
+                           , prix_total=prix_total
                            , items_filtre=types_article
                            )

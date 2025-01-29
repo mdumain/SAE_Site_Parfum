@@ -74,7 +74,7 @@ CREATE TABLE parfum(
     fournisseur_id INT,
     description VARCHAR(1000),
     image VARCHAR(50),
-    quantite INT,
+    stock INT,
     CONSTRAINT fk_parfum_marque FOREIGN KEY (marque_id) REFERENCES marque(id_marque),
     CONSTRAINT fk_parfum_fournisseur FOREIGN KEY (fournisseur_id) REFERENCES fournisseur(id_fournisseur),
     CONSTRAINT fk_parfum_conditionnement FOREIGN KEY (conditionnement_id) REFERENCES conditionnement(id_conditionnement),
@@ -85,22 +85,22 @@ CREATE TABLE parfum(
 
 CREATE TABLE ligne_commande(
     id_commande INT,
-    id_parfum INT,
+    parfum_id INT,
     prix NUMERIC(10,2),
     quantite INT,
     FOREIGN KEY (id_commande) REFERENCES commande(id_commande),
-    FOREIGN KEY (id_parfum) REFERENCES parfum(id_parfum)
+    FOREIGN KEY (parfum_id) REFERENCES parfum(id_parfum)
 
 );
 
 CREATE TABLE ligne_panier(
-    id_utilisateur INT,
-    id_parfum INT,
+    utilisateur_id INT,
+    parfum_id INT,
     quantite INT,
     date_ajout DATE,
-    PRIMARY KEY (id_utilisateur,id_parfum,date_ajout),
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur),
-    FOREIGN KEY (id_parfum) REFERENCES parfum(id_parfum)
+    PRIMARY KEY (utilisateur_id,parfum_id,date_ajout),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (parfum_id) REFERENCES parfum(id_parfum)
 );
 
 INSERT INTO conditionnement VALUES
@@ -184,7 +184,7 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:1000000$qDAkJlUehmaARP1S$39044e949f63765b785007523adcde3d2ad9c2283d71e3ce5ffe58cbf8d86080',
     'ROLE_client','client2','1');
 
-SELECT parfum.id_parfum, parfum.nom_parfum, parfum.prix_parfum, conditionnement.libelle_conditionnement, volume.nom_volume, genre.libelle_genre, marque.nom_marque, fournisseur.nom_fournisseur, parfum.description, parfum.image, quantite
+SELECT parfum.id_parfum, parfum.nom_parfum, parfum.prix_parfum, conditionnement.libelle_conditionnement, volume.nom_volume, genre.libelle_genre, marque.nom_marque, fournisseur.nom_fournisseur, parfum.description, parfum.image, stock
 FROM parfum JOIN conditionnement ON conditionnement_id = id_conditionnement
 JOIN fournisseur ON id_fournisseur = fournisseur_id
 JOIN genre ON id_genre = genre_id
