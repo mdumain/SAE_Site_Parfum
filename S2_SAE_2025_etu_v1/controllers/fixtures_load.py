@@ -65,8 +65,8 @@ def fct_fixtures_load():
     mycursor.execute(sql)
     sql = ''' 
     INSERT INTO etat VALUES 
-        (Null,"Expédié"), 
         (Null,"En attente"),
+        (Null,"Expédié"), 
         (Null,"Livrée");
     '''
     mycursor.execute(sql)
