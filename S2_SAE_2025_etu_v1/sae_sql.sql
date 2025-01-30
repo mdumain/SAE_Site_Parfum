@@ -184,6 +184,11 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:1000000$qDAkJlUehmaARP1S$39044e949f63765b785007523adcde3d2ad9c2283d71e3ce5ffe58cbf8d86080',
     'ROLE_client','client2','1');
 
+INSERT INTO commande VALUES
+    (NULL, str_to_date('01-01-2000','%d-%m-%Y'), 2, 1);
+
+
+
 SELECT parfum.id_parfum, parfum.nom_parfum, parfum.prix_parfum, conditionnement.libelle_conditionnement, volume.nom_volume, genre.libelle_genre, marque.nom_marque, fournisseur.nom_fournisseur, parfum.description, parfum.image, stock
 FROM parfum JOIN conditionnement ON conditionnement_id = id_conditionnement
 JOIN fournisseur ON id_fournisseur = fournisseur_id

@@ -12,7 +12,7 @@ fixtures_load = Blueprint("fixtures_load", __name__,
 @fixtures_load.route("/base/init")
 def fct_fixtures_load():
     mycursor = get_db().cursor()
-    sql = '''DROP TABLE IF EXISTS ligne_panier, fournisseur, ligne_commande, commande, parfum, genre, etat, utilisateur, volume, conditionnement,marque;'''
+    sql = '''DROP TABLE IF EXISTS ligne_commande, ligne_panier, parfum, conditionnement, volume, genre, commande, etat, utilisateur, fournisseur, marque;'''
 
     mycursor.execute(sql)
     sql = '''
@@ -65,10 +65,9 @@ def fct_fixtures_load():
     mycursor.execute(sql)
     sql = ''' 
     INSERT INTO etat VALUES 
-        (Null,"En attente"),
         (Null,"Expédié"), 
-        (Null,"Validé"), 
-        (Null,"Confirmé");
+        (Null,"En attente"),
+        (Null,"Livrée");
     '''
     mycursor.execute(sql)
 
@@ -216,7 +215,7 @@ def fct_fixtures_load():
     sql = ''' 
     INSERT INTO commande VALUE 
         (Null,"2021-06-01",1,1), 
-        (Null,"2021-06-02",2,1), 
+        (Null,"2021-06-02",2,3), 
         (Null,"2021-06-03",3,1);
     '''
     mycursor.execute(sql)
@@ -235,7 +234,7 @@ def fct_fixtures_load():
     sql = ''' 
     INSERT INTO ligne_commande VALUES 
         (1,1,10,1),
-        ( 2,2,10,1),
+        (2,2,10,1),
         (3,3,15,1);
     '''
     mycursor.execute(sql)
