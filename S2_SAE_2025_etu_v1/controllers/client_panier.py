@@ -128,80 +128,12 @@ def client_panier_filtre():
     filter_prix_max = request.form.get('filter_prix_max', None)
     filter_types = request.form.getlist('filter_types', None)
     # test des variables puis
-
-    param = []
-
-    filtres = {'filter_word': filter_word, 'filter_types': filter_types,
-               'filter_prix_min': filter_prix_min, 'filter_prix_max': filter_prix_max}
-
-    print(filtres)
     # mise en session des variables
-
-# Requete SQL
-    sql = ''' SELECT id_parfum, nom_parfum, prix_parfum, conditionnement_id, 
-    volume_id, genre_id, marque_id, FROM parfum 
-    JOIN libelle_genre ON parfum.genre_id = libelle_genre.id_genre WHERE 1=1'''
-
-# pour filter_word
-    if filter_word == '' or filter_word:
-        if len(filter_word) > 1:
-            if filter_word.isalpha():
-                sql += " AND nom_parfum LIKE %s"
-                param.append(f"%{filter_word}%")
-            else:
-                flash(u'Le Mot doit être composé uniquement de lettre')
-        else:
-            if len(filter_word) == 1:
-                flash(u'Le Mot doit être composé doit être composé de au moins 2 lettres')
-                return redirect('/client/article/show')
-
-# FILTRE SUR LES PRIX
-    if filter_prix_min and filter_prix_max:
-        if int(filter_prix_min) < int(filter_prix_max):
-            sql += " AND prix_parfum BETWEEN %s AND %s"
-            param.append(filter_prix_min)
-            param.append(filter_prix_max)
-        else:
-            flash(u'min et max doivent être des numériques')
-    elif not filter_prix_min and filter_prix_max:
-        filter_prix_min = 0
-        sql += " AND prix_parfum BETWEEN %s AND %s"
-        param.append(filter_prix_min)
-        param.append(filter_prix_max)
-    elif filter_prix_min and not filter_prix_max:
-        filter_prix_max = 99999999999999999
-        sql += " AND prix_parfum BETWEEN %s AND %s"
-        param.append(filter_prix_min)
-        param.append(filter_prix_max)
-
-        # FILTRE SUR LES TYPES
-    if filter_types and filter_types != []:
-        sql += " AND ("
-        i = 0
-        for type_article in filter_types:
-            sql += " genre_id = %s"
-            param.append(type_article)
-            if i == len(filter_types) - 1:
-                sql += ")"
-            else:
-                sql += " OR"
-                i += 1
-    sql += " ORDER BY parfum.nom_parfum;"
-    mycursor.execute(sql, param)
-    parfums = mycursor.fetchall()
-
-    mycursor.execute("SELECT * FROM parfum ORDER BY parfum.nom_parfum")
-    items_filtre = mycursor.fetchall()
-    
-    return redirect('/client/article/show'
-                        , parfums=parfums
-                        , items_filtre=items_filtre
-                        , filtres=filtres)
+    return redirect('/client/article/show')
 
 
 @client_panier.route('/client/panier/filtre/suppr', methods=['POST'])
 def client_panier_filtre_suppr():
     # suppression  des variables en session
-    filtres = {'filter_word': '', 'filter_types': [], 'filter_prix_min': '', 'filter_prix_max': ''}
     print("suppr filtre")
-    return redirect('/client/article/show', items_filtre=[], filtres=filtres)
+    return redirect('/client/article/show')
