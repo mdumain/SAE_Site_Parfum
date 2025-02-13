@@ -1,3 +1,4 @@
 .idea
 .env
 connexion_db.py
+__pycache__

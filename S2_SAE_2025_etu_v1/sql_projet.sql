@@ -19,4 +19,4 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'ROLE_client','client','1'),
 (3,'client2','client2@client2.fr',
     'pbkdf2:sha256:1000000$qDAkJlUehmaARP1S$39044e949f63765b785007523adcde3d2ad9c2283d71e3ce5ffe58cbf8d86080',
-    'ROLE_client','client2','1');;
+    'ROLE_client','client2','1');

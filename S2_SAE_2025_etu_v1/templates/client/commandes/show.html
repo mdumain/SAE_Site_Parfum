@@ -10,7 +10,7 @@
                 <tbody>
                         {% for ligne in articles_commande %}
                             <tr>
-                                <td>{{ ligne.nom }}
+                                <td>{{ ligne.nom_parfum }}
                                 {% if ligne.nb_declinaisons is defined and ligne.nb_declinaisons > 1 %}
                                     <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaisons }} declinaisons )</span>
                                     <span style="color:#6dcea2">
@@ -26,7 +26,7 @@
                                 {% endif %}
                                 </td>
                                 <td>{{ ligne.quantite }}</td>
-                                <td>{{ ligne.prix }} €</td>
+                                <td>{{ ligne.prix_parfum }} €</td>
                                 <td>{{ ligne.prix_ligne }} €  </td>
                             </tr>
                         {% endfor %}
@@ -71,11 +71,11 @@
                                     {{ "{:,.2f} €".format(commande.prix_total) }}
                                 </td>
                                 <td style="text-align: center;">
-                                    {% if commande.etat_id == 1 %} <div style="background-color: #ba8b00; padding: 5px;">
-                                     {{ commande.libelle }}
+                                    {% if commande.id_etat == 1 %} <div style="background-color: #ba8b00; padding: 5px;">
+                                     {{ commande.libelle_etat }}
                                     </div>
                                     {% else %} <div style="background-color: #34ce57; padding: 5px;">
-                                        {{ commande.libelle }} </div>
+                                        {{ commande.libelle_etat }} </div>
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;">

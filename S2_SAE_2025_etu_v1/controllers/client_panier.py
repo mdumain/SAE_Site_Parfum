@@ -37,19 +37,20 @@ def client_panier_add():
     #                                , article=article)
 
 # ajout dans le panier d'un article
-    sql = '''SELECT * FROM ligne_panier WHERE parfum_id = %s AND id_utilisateur'''
+    sql = '''SELECT * FROM ligne_panier WHERE parfum_id = %s AND utilisateur_id = %s'''
     mycursor.execute(sql,(id_article,id_client))
     article_panier = mycursor.fetchone()
     if not (article_panier is None) and article_panier['quantite'] >=1 :
         tuple_update = (quantite, id_client,id_article)
-        sql = '''UPDATE ligne_panier SET quantite = quantote+%s WHERE id_utilisateur = %s AND parfum_id=%s'''
+        sql = '''UPDATE ligne_panier SET quantite = quantite+%s WHERE utilisateur_id = %s AND parfum_id=%s'''
         mycursor.execute(sql,tuple_update)
 
     else:
         tuple_insert = (id_client,id_article,quantite)
         sql = '''INSERT INTO ligne_panier(utilisateur_id,parfum_id,quantite, date_ajout) VALUES (%s,%s,%s, current_timestamp)'''
         mycursor.execute(sql,tuple_insert)
-
+    sql = '''UPDATE parfum SET stock = stock - %s WHERE id_parfum = %s'''
+    mycursor.execute(sql, (quantite, id_article))
 
     get_db().commit()
 
@@ -67,15 +68,17 @@ def client_panier_delete():
     # partie 2 : on supprime une déclinaison de l'article
     # id_declinaison_article = request.form.get('id_declinaison_article', None)
 
-    sql = ''' selection de la ligne du panier pour l'article et l'utilisateur connecté'''
-    article_panier=[]
-
+    sql = ''' SELECT * FROM ligne_panier WHERE utilisateur_id = %s AND parfum_id=%s'''
+    mycursor.execute(sql, (id_client, id_article))
+    article_panier = mycursor.fetchone()
+    print(article_panier)
     if not(article_panier is None) and article_panier['quantite'] > 1:
-        sql = ''' mise à jour de la quantité dans le panier => -1 article '''
+        sql = ''' UPDATE ligne_panier SET quantite = quantite-1 WHERE utilisateur_id = %s AND parfum_id=%s'''
     else:
-        sql = ''' suppression de la ligne de panier'''
-
-    # mise à jour du stock de l'article disponible
+        sql = ''' DELETE FROM ligne_panier WHERE utilisateur_id = %s AND parfum_id=%s'''
+    mycursor.execute(sql, (id_client, id_article))
+    sql = '''UPDATE parfum SET stock = stock + 1 WHERE id_parfum = %s'''
+    mycursor.execute(sql, (id_article))
     get_db().commit()
     return redirect('/client/article/show')
 
@@ -87,12 +90,15 @@ def client_panier_delete():
 def client_panier_vider():
     mycursor = get_db().cursor()
     client_id = session['id_user']
-    sql = ''' sélection des lignes de panier'''
-    items_panier = []
+    sql = ''' SELECT * FROM ligne_panier WHERE utilisateur_id = %s'''
+    mycursor.execute(sql, (client_id))
+    items_panier = mycursor.fetchall()
     for item in items_panier:
-        sql = ''' suppression de la ligne de panier de l'article pour l'utilisateur connecté'''
+        sql = '''DELETE FROM ligne_panier WHERE utilisateur_id = %s AND parfum_id = %s'''
+        mycursor.execute(sql, (client_id, item['parfum_id']))
 
-        sql2=''' mise à jour du stock de l'article : stock = stock + qté de la ligne pour l'article'''
+        sql='''UPDATE parfum SET stock = stock + %s WHERE id_parfum = %s'''
+        mycursor.execute(sql, (item['quantite'], item['parfum_id']))
         get_db().commit()
     return redirect('/client/article/show')
 
@@ -101,13 +107,16 @@ def client_panier_vider():
 def client_panier_delete_line():
     mycursor = get_db().cursor()
     id_client = session['id_user']
+    id_article = request.form.get('id_article', '')
     #id_declinaison_article = request.form.get('id_declinaison_article')
 
-    sql = ''' selection de ligne du panier '''
-
-    sql = ''' suppression de la ligne du panier '''
-    sql2=''' mise à jour du stock de l'article : stock = stock + qté de la ligne pour l'article'''
-
+    sql = '''SELECT * FROM ligne_panier WHERE utilisateur_id = %s AND parfum_id = %s'''
+    mycursor.execute(sql, (id_client, id_article))
+    quantite = mycursor.fetchone()['quantite']
+    sql = '''DELETE FROM ligne_panier WHERE utilisateur_id = %s AND parfum_id = %s'''
+    mycursor.execute(sql, (id_client, id_article))
+    sql='''UPDATE parfum SET stock = stock + %s WHERE id_parfum = %s'''
+    mycursor.execute(sql, (quantite, id_article))
     get_db().commit()
     return redirect('/client/article/show')
 
