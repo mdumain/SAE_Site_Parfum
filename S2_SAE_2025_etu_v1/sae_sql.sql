@@ -38,8 +38,7 @@ CREATE TABLE etat (
 
 INSERT INTO etat VALUES
     (Null,"En attente"),
-    (Null,"Expédié"),
-    (Null,"Livrée");
+    (Null,"Expédié");
 
 CREATE TABLE conditionnement (
     id_conditionnement INT AUTO_INCREMENT PRIMARY KEY,
@@ -145,6 +144,7 @@ INSERT INTO parfum VALUES
     (NULL, "Aventus", 300, 1, 8, 1, 9, 2, "Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d'ananas, de bouleau et de musc.", "aventus.jpg",6),
     (NULL, "Green Tea", 30, 1, 4, 3, 16, 3, "Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.", "green_tea.jpg",7),
     (NULL, "Citrus Splash", 25, 1, 4, 3, 17, 3, "Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.", "citrus_splash.jpg",8);
+
 CREATE TABLE commande(
     id_commande INT AUTO_INCREMENT PRIMARY KEY,
     date_achat DATE,
@@ -156,7 +156,7 @@ CREATE TABLE commande(
 
 INSERT INTO commande VALUE
     (Null,"2021-06-01",1,1),
-    (Null,"2021-06-02",2,3),
+    (Null,"2021-06-02",2,2),
     (Null,"2021-06-03",3,1);
 
 CREATE TABLE ligne_commande(
