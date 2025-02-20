@@ -18,17 +18,34 @@ def admin_index():
 def admin_commande_show():
     mycursor = get_db().cursor()
     admin_id = session['id_user']
-    sql = '''      '''
+    id_commande = request.args.get('id_commande', '')
 
     commandes=[]
 
-    articles_commande = None
+
+    sql = '''
+    SELECT commande.id_commande AS login, commande.id_etat AS etat_id, commande.date_achat, 
+               COUNT(ligne_commande.id_commande) AS nbr_articles, 
+               etat.libelle_etat AS libelle, SUM(ligne_commande.prix * ligne_commande.quantite) AS prix_total , commande.id_commande
+        FROM commande
+        JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande
+        JOIN etat ON commande.id_etat = etat.id_etat
+        GROUP BY commande.id_commande, commande.id_etat, commande.date_achat, etat.libelle_etat
+    '''
+
+    mycursor.execute(sql, commandes)
+
+    commandes=mycursor.fetchall()
     commande_adresses = None
-    id_commande = request.args.get('id_commande', None)
-    print(id_commande)
     if id_commande != None:
-        sql = '''    '''
-        commande_adresses = []
+        sql = '''  SELECT parfum.nom_parfum AS nom  , ligne_commande.quantite, ligne_commande.prix , ligne_commande.quantite * ligne_commande.prix AS prix_ligne
+        FROM commande
+        JOIN ligne_commande ON commande.id_commande=ligne_commande.id_commande
+        JOIN parfum ON ligne_commande.parfum_id=parfum.id_parfum
+        WHERE %s = commande.id_commande  '''
+        mycursor.execute(sql, id_commande)
+
+        articles_commande = mycursor.fetchall()
     return render_template('admin/commandes/show.html'
                            , commandes=commandes
                            , articles_commande=articles_commande
@@ -42,7 +59,9 @@ def admin_commande_valider():
     commande_id = request.form.get('id_commande', None)
     if commande_id != None:
         print(commande_id)
-        sql = '''           '''
+        sql = '''     UPDATE commande
+        SET id_etat = 2
+        WHERE %s=id_commande'''
         mycursor.execute(sql, commande_id)
         get_db().commit()
     return redirect('/admin/commande/show')
