@@ -17,15 +17,75 @@ def client_article_show():                                 # remplace client_ind
 
     sql = '''   SELECT * FROM parfum  '''
     mycursor.execute(sql,[])
+    filter_word=''
+    filter_prix_min, filter_prix_max = None, None
+    filter_types = []
 
-    list_param = []
-    condition_and = ""
-    # utilisation du filtre
-    sql3=''' prise en compte des commentaires et des notes dans le SQL    '''
+    if "filter_word" in session.keys():
+        filter_word = session['filter_word']
+    if "filter_prix_min" in session.keys():
+        filter_prix_min = session['filter_prix_min']
+    if "filter_prix_max" in session.keys():
+        filter_prix_max = session['filter_prix_max']
+    if "filter_types" in session.keys():
+        filter_types = session['filter_types']
+
+    param = []
+
+    sql = ''' SELECT * FROM parfum 
+    JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1'''
+
+    # pour filter_word
+    if filter_word != '':
+        if len(filter_word) > 1:
+            if filter_word.isalpha():
+                sql += " AND nom_parfum LIKE %s"
+                param.append(f"%{filter_word}%")
+            else:
+                flash(u'Le Mot doit être composé uniquement de lettre')
+        else:
+            if len(filter_word) == 1:
+                flash(u'Le Mot doit être composé doit être composé de au moins 2 lettres')
+
+
+    # FILTRE SUR LES PRIX
+    if filter_prix_min != "":
+        if filter_prix_max != "":
+            if int(filter_prix_min) < int(filter_prix_max):
+                sql += ''' AND prix_parfum BETWEEN %s AND %s'''
+                param.append(int(filter_prix_min))
+                param.append(int(filter_prix_max))
+            else:
+                flash(u'min et max doivent être des numériques')
+        else:
+            sql += ''' AND prix_parfum > %s'''
+            param.append(int(filter_prix_min))
+    elif filter_prix_max != "":
+        sql += '''AND prix_parfum < %s'''
+        param.append(int(filter_prix_max))
+
+    # FILTRE SUR LES TYPES
+    if filter_types != []:
+        sql += " AND ("
+        i = 0
+        for type_article in filter_types:
+            sql += " genre_id = %s"
+            param.append(type_article)
+            if i == len(filter_types) - 1:
+                sql += ")"
+            else:
+                sql += " OR"
+                i += 1
+
+    print(sql)
+
+    mycursor.execute(sql, param)
     articles = mycursor.fetchall()
 
+    sql3=''' prise en compte des commentaires et des notes dans le SQL    '''
+
     sql1 = ''' SELECT * FROM genre '''
-    mycursor.execute(sql1,list_param)
+    mycursor.execute(sql1)
 
     # pour le filtre
     types_article = mycursor.fetchall()
@@ -34,7 +94,7 @@ def client_article_show():                                 # remplace client_ind
 
     articles_panier = []
     sql = '''SELECT * FROM ligne_panier JOIN parfum on ligne_panier.parfum_id = parfum.id_parfum'''
-    mycursor.execute(sql,list_param)
+    mycursor.execute(sql)
     articles_panier = mycursor.fetchall()
 
 
