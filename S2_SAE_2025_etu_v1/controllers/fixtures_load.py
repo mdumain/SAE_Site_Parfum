@@ -213,9 +213,9 @@ def fct_fixtures_load():
     mycursor.execute(sql)
     sql = ''' 
     INSERT INTO commande VALUE 
-        (Null,"2021-06-01",1,1), 
+        (Null,"2021-06-01",2,1), 
         (Null,"2021-06-02",2,2), 
-        (Null,"2021-06-03",2,1);
+        (Null,"2021-06-03",3,1);
     '''
     mycursor.execute(sql)
 
