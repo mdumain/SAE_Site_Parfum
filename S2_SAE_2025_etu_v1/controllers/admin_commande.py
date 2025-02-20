@@ -24,12 +24,13 @@ def admin_commande_show():
 
 
     sql = '''
-    SELECT commande.id_commande AS login, commande.id_etat AS etat_id, commande.date_achat, 
+    SELECT utilisateur.login, commande.id_etat AS etat_id, commande.date_achat, 
                COUNT(ligne_commande.id_commande) AS nbr_articles, 
                etat.libelle_etat AS libelle, SUM(ligne_commande.prix * ligne_commande.quantite) AS prix_total , commande.id_commande
         FROM commande
         JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande
         JOIN etat ON commande.id_etat = etat.id_etat
+        JOIN utilisateur ON commande.id_utilisateur=utilisateur.id_utilisateur
         GROUP BY commande.id_commande, commande.id_etat, commande.date_achat, etat.libelle_etat
     '''
 
@@ -42,6 +43,7 @@ def admin_commande_show():
         FROM commande
         JOIN ligne_commande ON commande.id_commande=ligne_commande.id_commande
         JOIN parfum ON ligne_commande.parfum_id=parfum.id_parfum
+        
         WHERE %s = commande.id_commande  '''
         mycursor.execute(sql, id_commande)
 
