@@ -36,7 +36,7 @@ def client_article_show():                                 # remplace client_ind
     JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1'''
 
     # pour filter_word
-    if filter_word != '':
+    if "filter_word" in session.keys() and filter_word != '':
         if len(filter_word) > 1:
             if filter_word.isalpha():
                 sql += " AND nom_parfum LIKE %s"
@@ -49,8 +49,8 @@ def client_article_show():                                 # remplace client_ind
 
 
     # FILTRE SUR LES PRIX
-    if filter_prix_min != "":
-        if filter_prix_max != "":
+    if "filter_prix_min" in session.keys() and filter_prix_min != "":
+        if "filter_prix_max" in session.keys() and filter_prix_max != "":
             if int(filter_prix_min) < int(filter_prix_max):
                 sql += ''' AND prix_parfum BETWEEN %s AND %s'''
                 param.append(int(filter_prix_min))
@@ -60,12 +60,12 @@ def client_article_show():                                 # remplace client_ind
         else:
             sql += ''' AND prix_parfum > %s'''
             param.append(int(filter_prix_min))
-    elif filter_prix_max != "":
+    elif "filter_prix_max" in session.keys() and filter_prix_max != "":
         sql += '''AND prix_parfum < %s'''
         param.append(int(filter_prix_max))
 
     # FILTRE SUR LES TYPES
-    if filter_types != []:
+    if "filter_types" in session.keys() and filter_types != []:
         sql += " AND ("
         i = 0
         for type_article in filter_types:
