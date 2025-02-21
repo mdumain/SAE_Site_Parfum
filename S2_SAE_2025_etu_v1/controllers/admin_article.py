@@ -113,13 +113,13 @@ def edit_article():
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
     sql = '''
-    requête admin_article_6
+    SELECT id_parfum AS id_article, nom_parfum AS nom, prix_parfum AS prix, image, description from parfum where id_parfum = %s
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
     print(article)
     sql = '''
-    requête admin_article_7
+    SELECT id_genre AS id_type_article, nom_genre AS libelle FROM genre; 
     '''
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
@@ -147,22 +147,22 @@ def valid_edit_article():
     prix = request.form.get('prix', '')
     description = request.form.get('description')
     sql = '''
-       requête admin_article_8
+       SELECT image FROM parfum WHERE id_parfum = %s
        '''
     mycursor.execute(sql, id_article)
     image_nom = mycursor.fetchone()
     image_nom = image_nom['image']
     if image:
         if image_nom != "" and image_nom is not None and os.path.exists(
-                os.path.join(os.getcwd() + "/static/images/", image_nom)):
-            os.remove(os.path.join(os.getcwd() + "/static/images/", image_nom))
+                os.path.join(os.getcwd() + "/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/", image_nom)):
+            os.remove(os.path.join(os.getcwd() + "/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/", image_nom))
         # filename = secure_filename(image.filename)
         if image:
             filename = 'img_upload_' + str(int(2147483647 * random())) + '.png'
-            image.save(os.path.join('static/images/', filename))
+            image.save(os.path.join('/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/', filename))
             image_nom = filename
 
-    sql = '''  requête admin_article_9 '''
+    sql = ''' UPDATE parfum SET nom_parfum = %s , image = %s ,prix_parfum = %s, genre_id = %s, description = %s WHERE id_parfum = %s '''
     mycursor.execute(sql, (nom, image_nom, prix, type_article_id, description, id_article))
 
     get_db().commit()
