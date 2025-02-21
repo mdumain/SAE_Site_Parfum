@@ -54,7 +54,7 @@ def valid_add_article():
 
     if image:
         filename = 'img_upload'+ str(int(2147483647 * random())) + '.png'
-        image.save(os.path.join('static/images/', filename))
+        image.save(os.path.join('../static/images/', filename))
     else:
         print("erreur")
         filename=None
@@ -83,7 +83,7 @@ def delete_article():
     sql = ''' requête admin_article_3 '''
     mycursor.execute(sql, id_article)
     nb_declinaison = mycursor.fetchone()
-    
+
     if nb_declinaison['nb_declinaison'] > 0:
         message= u'il y a des declinaisons dans cet article : vous ne pouvez pas le supprimer'
         flash(message, 'alert-warning')
@@ -113,7 +113,7 @@ def edit_article():
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
     sql = '''
-    requête admin_article_6    
+    requête admin_article_6
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
