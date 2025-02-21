@@ -54,7 +54,7 @@ def valid_add_article():
 
     if image:
         filename = 'img_upload'+ str(int(2147483647 * random())) + '.png'
-        image.save(os.path.join('../static/images/', filename))
+        image.save(os.path.join('static/images/', filename))
     else:
         print("erreur")
         filename=None
