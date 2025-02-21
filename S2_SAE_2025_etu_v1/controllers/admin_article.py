@@ -54,7 +54,7 @@ def valid_add_article():
 
     if image:
         filename = 'img_upload'+ str(int(2147483647 * random())) + '.png'
-        image.save(os.path.join('static/images/', filename))
+        image.save(os.path.join('/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/', filename))
     else:
         print("erreur")
         filename=None
@@ -99,7 +99,7 @@ def delete_article():
     mycursor.execute(sql, id_article)
     get_db().commit()
     if image != None:
-        os.remove('static/images/' + image)
+        os.remove('/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/' + image)
 
     print("un article supprimé, id :", id_article)
     message = u'un article supprimé, id : ' + id_article
