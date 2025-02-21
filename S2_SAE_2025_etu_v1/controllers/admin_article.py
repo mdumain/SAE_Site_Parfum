@@ -17,7 +17,10 @@ admin_article = Blueprint('admin_article', __name__,
 @admin_article.route('/admin/article/show')
 def show_article():
     mycursor = get_db().cursor()
-    sql = '''  requête admin_article_1
+    sql = '''  SELECT parfum.nom_parfum AS nom, parfum.id_parfum AS id_article, genre.nom_genre AS libelle, parfum.genre_id AS type_article_id ,parfum.prix_parfum AS prix, parfum.stock AS stock, parfum.image AS image
+    FROM parfum
+    JOIN genre ON parfum.genre_id = genre.id_genre
+    ORDER BY parfum.nom_parfum ASC;
     '''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
@@ -26,10 +29,14 @@ def show_article():
 
 @admin_article.route('/admin/article/add', methods=['GET'])
 def add_article():
+
     mycursor = get_db().cursor()
+    sql = ''' SELECT id_genre AS id_type_article, nom_genre AS libelle FROM genre; '''
+    mycursor.execute(sql)
+    type_article = mycursor.fetchall()
 
     return render_template('admin/article/add_article.html'
-                           #,types_article=type_article,
+                           ,types_article=type_article,
                            #,couleurs=colors
                            #,tailles=tailles
                             )
@@ -52,9 +59,9 @@ def valid_add_article():
         print("erreur")
         filename=None
 
-    sql = '''  requête admin_article_2 '''
+    sql = '''  INSERT INTO parfum(nom_parfum,image,prix_parfum,genre_id,description) VALUES (%s,%s,%s,%s,%s)'''
 
-    tuple_add = (nom, filename, prix, type_article_id, description)
+    tuple_add = (nom, filename, int(prix), int(type_article_id), description)
     print(tuple_add)
     mycursor.execute(sql, tuple_add)
     get_db().commit()
@@ -70,29 +77,33 @@ def valid_add_article():
 @admin_article.route('/admin/article/delete', methods=['GET'])
 def delete_article():
     id_article=request.args.get('id_article')
+    print(id_article)
     mycursor = get_db().cursor()
+    """
     sql = ''' requête admin_article_3 '''
     mycursor.execute(sql, id_article)
     nb_declinaison = mycursor.fetchone()
+    
     if nb_declinaison['nb_declinaison'] > 0:
         message= u'il y a des declinaisons dans cet article : vous ne pouvez pas le supprimer'
         flash(message, 'alert-warning')
     else:
-        sql = ''' requête admin_article_4 '''
-        mycursor.execute(sql, id_article)
-        article = mycursor.fetchone()
-        print(article)
-        image = article['image']
+    """
+    sql = ''' SELECT * from parfum WHERE id_parfum = %s '''
+    mycursor.execute(sql, id_article)
+    article = mycursor.fetchone()
+    print(article)
+    image = request.files.get('image')
 
-        sql = ''' requête admin_article_5  '''
-        mycursor.execute(sql, id_article)
-        get_db().commit()
-        if image != None:
-            os.remove('static/images/' + image)
+    sql = ''' DELETE FROM parfum WHERE parfum.id_parfum =%s  '''
+    mycursor.execute(sql, id_article)
+    get_db().commit()
+    if image != None:
+        os.remove('static/images/' + image)
 
-        print("un article supprimé, id :", id_article)
-        message = u'un article supprimé, id : ' + id_article
-        flash(message, 'alert-success')
+    print("un article supprimé, id :", id_article)
+    message = u'un article supprimé, id : ' + id_article
+    flash(message, 'alert-success')
 
     return redirect('/admin/article/show')
 
