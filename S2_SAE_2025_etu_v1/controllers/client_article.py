@@ -58,10 +58,10 @@ def client_article_show():                                 # remplace client_ind
             else:
                 flash(u'min et max doivent être des numériques')
         else:
-            sql += ''' AND prix_parfum > %s'''
+            sql += ''' AND prix_parfum >= %s'''
             param.append(int(filter_prix_min))
     elif "filter_prix_max" in session.keys() and filter_prix_max != "":
-        sql += '''AND prix_parfum < %s'''
+        sql += ''' AND prix_parfum <= %s'''
         param.append(int(filter_prix_max))
 
     # FILTRE SUR LES TYPES
@@ -76,8 +76,6 @@ def client_article_show():                                 # remplace client_ind
             else:
                 sql += " OR"
                 i += 1
-
-    print(sql)
 
     mycursor.execute(sql, param)
     articles = mycursor.fetchall()
