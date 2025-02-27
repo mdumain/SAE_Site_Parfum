@@ -123,23 +123,36 @@ def client_panier_delete_line():
 
 @client_panier.route('/client/panier/filtre', methods=['POST'])
 def client_panier_filtre():
+
     filter_word = request.form.get('filter_word', None)
     filter_prix_min = request.form.get('filter_prix_min', None)
     filter_prix_max = request.form.get('filter_prix_max', None)
     filter_types = request.form.getlist('filter_types', None)
-    session['filter_word'] = filter_word
-    session['filter_types'] = filter_types
-    session['filter_prix_min'] = filter_prix_min
-    session['filter_prix_max'] = filter_prix_max
+
+    if filter_word != '' and not filter_word.isalpha():
+        flash(u'Le Mot doit être composé uniquement de lettre')
+    elif len(filter_word) == 1:
+        flash(u'Le Mot doit être composé doit être composé de au moins 2 lettres')
+
+    elif filter_prix_min != "" and filter_prix_max != "":
+        if int(filter_prix_min) > int(filter_prix_max):
+            flash(u'le min doit être plut petit que le max')
+
+    else:
+        session['filter_word'] = filter_word
+        session['filter_types'] = filter_types
+        session['filter_prix_min'] = filter_prix_min
+        session['filter_prix_max'] = filter_prix_max
+
     return redirect('/client/article/show')
 
 
 @client_panier.route('/client/panier/filtre/suppr', methods=['POST'])
 def client_panier_filtre_suppr():
-    # suppression  des variables en session
-    print("suppr filtre")
+
     session['filter_prix_min'] = ''
     session['filter_prix_max'] = ''
     session['filter_types'] = []
     session['filter_word'] = ''
+
     return redirect('/client/article/show')

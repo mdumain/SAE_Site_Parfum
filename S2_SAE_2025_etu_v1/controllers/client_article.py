@@ -35,7 +35,6 @@ def client_article_show():                                 # remplace client_ind
     sql = ''' SELECT * FROM parfum 
     JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1'''
 
-    # pour filter_word
     if "filter_word" in session.keys() and filter_word != '':
         if len(filter_word) > 1:
             if filter_word.isalpha():
@@ -47,8 +46,6 @@ def client_article_show():                                 # remplace client_ind
             if len(filter_word) == 1:
                 flash(u'Le Mot doit être composé doit être composé de au moins 2 lettres')
 
-
-    # FILTRE SUR LES PRIX
     if "filter_prix_min" in session.keys() and filter_prix_min != "":
         if "filter_prix_max" in session.keys() and filter_prix_max != "":
             if int(filter_prix_min) < int(filter_prix_max):
