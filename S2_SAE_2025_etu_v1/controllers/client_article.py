@@ -88,7 +88,7 @@ def client_article_show():                                 # remplace client_ind
 
 
     articles_panier = []
-    sql = '''SELECT * FROM ligne_panier JOIN parfum on ligne_panier.parfum_id = parfum.id_parfum'''
+    sql = '''SELECT * FROM ligne_panier JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum'''
     mycursor.execute(sql)
     articles_panier = mycursor.fetchall()
 
