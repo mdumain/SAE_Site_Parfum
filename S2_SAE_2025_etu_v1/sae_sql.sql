@@ -155,7 +155,7 @@ CREATE TABLE declinaison_parfum(
 
 INSERT INTO declinaison_parfum (id_parfum, stock, prix_declinaison, volume_id) VALUES
     (1, 84, 10, 3),
-    (1, 113, 12, 3),
+    (1, 113, 12, 4),
     (2, 69, 9.98, 2),
     (3, 97, 10, 1),
     (4, 25, 15, 3),
