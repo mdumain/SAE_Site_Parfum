@@ -67,8 +67,8 @@
                                  {% else %}
                                     <small class="text-muted">article  momentanément indisponible</small>
                                  {% endif %}
-                                {% if article.nb_declinaison is defined and article.nb_declinaison != None %}
-                                    ({{ article.nb_declinaison }} d.)
+                                {% if article.nb_dec is defined and article.nb_dec != None %}
+                                    ({{ article.nb_dec }} d.)
                                 {% endif %}
                                 <br>
                             {% endif %}

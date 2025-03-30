@@ -15,8 +15,6 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   SELECT * FROM parfum  '''
-    mycursor.execute(sql,[])
     filter_word=''
     filter_prix_min, filter_prix_max = None, None
     filter_types = []
@@ -32,8 +30,11 @@ def client_article_show():                                 # remplace client_ind
 
     param = []
 
-    sql = ''' SELECT * FROM parfum 
-    JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1'''
+    sql = ''' 
+    SELECT parfum.*, genre.*, SUM(stock) AS stock, COUNT(id_declinaison_parfum) AS nb_dec, MIN(prix_declinaison) AS prix_parfum FROM parfum
+                    JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
+                    JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1
+    '''
 
     if "filter_word" in session.keys() and filter_word != '':
         if len(filter_word) > 1:
@@ -46,22 +47,8 @@ def client_article_show():                                 # remplace client_ind
             if len(filter_word) == 1:
                 flash(u'Le Mot doit être composé doit être composé de au moins 2 lettres')
 
-    if "filter_prix_min" in session.keys() and filter_prix_min != "":
-        if "filter_prix_max" in session.keys() and filter_prix_max != "":
-            if int(filter_prix_min) < int(filter_prix_max):
-                sql += ''' AND prix_parfum BETWEEN %s AND %s'''
-                param.append(int(filter_prix_min))
-                param.append(int(filter_prix_max))
-            else:
-                flash(u'min et max doivent être des numériques')
-        else:
-            sql += ''' AND prix_parfum >= %s'''
-            param.append(int(filter_prix_min))
-    elif "filter_prix_max" in session.keys() and filter_prix_max != "":
-        sql += ''' AND prix_parfum <= %s'''
-        param.append(int(filter_prix_max))
 
-    # FILTRE SUR LES TYPES
+
     if "filter_types" in session.keys() and filter_types != []:
         sql += " AND ("
         i = 0
@@ -73,6 +60,23 @@ def client_article_show():                                 # remplace client_ind
             else:
                 sql += " OR"
                 i += 1
+
+    sql += '''GROUP BY parfum.id_parfum, parfum.nom_parfum, parfum.conditionnement_id, parfum.genre_id, parfum.marque_id, parfum.fournisseur_id, parfum.description, parfum.image, genre.id_genre, genre.nom_genre'''
+
+    if "filter_prix_min" in session.keys() and filter_prix_min != "":
+        if "filter_prix_max" in session.keys() and filter_prix_max != "":
+            if int(filter_prix_min) < int(filter_prix_max):
+                sql += ''' HAVING prix_parfum BETWEEN %s AND %s'''
+                param.append(int(filter_prix_min))
+                param.append(int(filter_prix_max))
+            else:
+                flash(u'min et max doivent être des numériques')
+        else:
+            sql += ''' HAVING prix_parfum >= %s'''
+            param.append(int(filter_prix_min))
+    elif "filter_prix_max" in session.keys() and filter_prix_max != "":
+        sql += ''' HAVING prix_parfum <= %s'''
+        param.append(int(filter_prix_max))
 
     mycursor.execute(sql, param)
     articles = mycursor.fetchall()
@@ -88,16 +92,20 @@ def client_article_show():                                 # remplace client_ind
 
 
     articles_panier = []
-    sql = '''SELECT * FROM ligne_panier JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum'''
+    sql = '''SELECT *, CONCAT(parfum.nom_parfum, ' (', volume.nom_volume, ')') AS nom 
+    FROM ligne_panier JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
+    JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
+    JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
+    '''
     mycursor.execute(sql)
     articles_panier = mycursor.fetchall()
 
 
     if len(articles_panier) >= 1:
         sql = ''' 
-        SELECT SUM(prix_parfum * quantite) AS prix_total
+        SELECT SUM(prix_declinaison * quantite) AS prix_total
         FROM ligne_panier 
-            JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum 
+            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
         WHERE utilisateur_id = %s 
         '''
         mycursor.execute(sql, (id_client))

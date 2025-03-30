@@ -62,12 +62,9 @@ def valid_add_article():
     sql = '''  INSERT INTO parfum(nom_parfum,image,prix_parfum,genre_id,description) VALUES (%s,%s,%s,%s,%s)'''
 
     tuple_add = (nom, filename, int(prix), int(type_article_id), description)
-    print(tuple_add)
     mycursor.execute(sql, tuple_add)
     get_db().commit()
 
-    print(u'article ajouté , nom: ', nom, ' - type_article:', type_article_id, ' - prix:', prix,
-          ' - description:', description, ' - image:', image)
     message = u'article ajouté , nom:' + nom + '- type_article:' + type_article_id + ' - prix:' + prix + ' - description:' + description + ' - image:' + str(
         image)
     flash(message, 'alert-success')
@@ -77,7 +74,6 @@ def valid_add_article():
 @admin_article.route('/admin/article/delete', methods=['GET'])
 def delete_article():
     id_article=request.args.get('id_article')
-    print(id_article)
     mycursor = get_db().cursor()
     """
     sql = ''' requête admin_article_3 '''
@@ -92,7 +88,6 @@ def delete_article():
     sql = ''' SELECT * from parfum WHERE id_parfum = %s '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
-    print(article)
     image = request.files.get('image')
 
     sql = ''' DELETE FROM parfum WHERE parfum.id_parfum =%s  '''
@@ -101,7 +96,6 @@ def delete_article():
     if image != None:
         os.remove('/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/' + image)
 
-    print("un article supprimé, id :", id_article)
     message = u'un article supprimé, id : ' + id_article
     flash(message, 'alert-success')
 

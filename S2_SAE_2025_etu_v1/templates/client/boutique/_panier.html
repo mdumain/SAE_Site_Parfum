@@ -11,7 +11,7 @@
                     </tr>
                     {% for item_panier in articles_panier %}
                         <tr>
-                            <td>{{item_panier.nom_parfum}}
+                            <td>{{item_panier.nom}}
                             {% if item_panier.id_couleur is defined and item_panier.id_couleur != None and item_panier.id_couleur >1 %}
                                 <small style="color: #6dcea2">({{ item_panier.libelle_couleur }})</small>
                             {% endif %}
@@ -20,13 +20,13 @@
                             {% endif %}
                             </td>
                             <td>{{item_panier.quantite}}</td>
-                            <td>{{item_panier.prix_parfum}}</td>
-                            <td>{{ "{:,.2f} €".format((item_panier.prix_parfum * item_panier.quantite)) }}{#{(panier.article.prix * panier.quantite)|number_format(2) }#}</td>
+                            <td>{{item_panier.prix_declinaison}}</td>
+                            <td>{{ "{:,.2f} €".format((item_panier.prix_declinaison * item_panier.quantite)) }}{#{(panier.article.prix * panier.quantite)|number_format(2) }#}</td>
                             <td>
 {# #}                            {% if item_panier.stock is defined %}
 {# #}                               {% if item_panier.stock > 0 %}
                                 <form action="/client/panier/add"  style="display: inline-block;"  method="post">
-{# #}                                   <input type="hidden" name="id_declinaison_article" value="{{ item_panier.id_declinaison_article }}">
+{# #}                                   <input type="hidden" name="id_declinaison_article" value="{{ item_panier.id_declinaison_parfum }}">
                                         <input type="hidden" name="quantite" value="1">
                                         <input type="hidden" name="id_parfum" value="{{ item_panier.id_parfum }}">
                                     <button class="btn btn-primary" > + </button>
@@ -34,13 +34,13 @@
 {# #}                               {% endif %}
 {# #}                           {% endif %}
                                 <form action="/client/panier/delete"   style="display: inline-block;"  method="post">
-{# #}                               <input type="hidden" name="id_declinaison_article" value="{{ item_panier.id_declinaison_article }}">
+{# #}                               <input type="hidden" name="id_declinaison_article" value="{{ item_panier.id_declinaison_parfum }}">
                                     <input type="hidden" name="id_article" value="{{ item_panier.id_parfum }}">
                                     <button class="btn btn-primary" > - </button>
                                 </form>
 
                                 <form action="/client/panier/delete/line"  style="display: inline-block;"  method="post">
-{# #}                               <input type="hidden" name="id_declinaison_article" value="{{ item_panier.id_declinaison_article }}">
+{# #}                               <input type="hidden" name="id_declinaison_article" value="{{ item_panier.id_declinaison_parfum }}">
                                     <input type="hidden" name="id_article" value="{{ item_panier.id_parfum }}">
                                     <button class="btn btn-primary" >Supprimer</button>
                                 </form>

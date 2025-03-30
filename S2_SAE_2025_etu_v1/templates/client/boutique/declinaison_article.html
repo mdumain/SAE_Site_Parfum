@@ -8,9 +8,7 @@
                             <div class="card-body border-dark rounded p-1">
                                 <a href="/client/article/details?id_article={{ article.id_article }}" >
                                 <h2 class="card-title">
-                                    <span style="color: #0b2e13">{{ article.nom }}</span><br>
-                                    {{ article.prix }}
-                                    €
+                                    <span style="color: #0b2e13">{{ article.nom_parfum }}</span><br>
                                 </h2>
                                      {%  if article.image is not none %}
                                         <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/')}}{{ article.image }}"  alt="image  de {{ article.nom }}" >
@@ -33,8 +31,8 @@
                     {% if item_declinaison.stock is defined and item_declinaison.stock != None %}
                         {% if item_declinaison.stock > 0 %}
                             <form  action="/client/panier/add"  method="post" class="col-2">
-                                 <input type="radio" name="id_declinaison_article" value="{{ item_declinaison.id_declinaison_article }}" required>
-                                    <small class="text-muted">Stock restant : {{ item_declinaison.stock }}</small>
+                                 <input type="radio" name="id_declinaison_article" value="{{ item_declinaison.id_declinaison_parfum }}" required>
+                                    <small class="text-muted">Stock : {{ item_declinaison.stock }} - Prix : {{ item_declinaison.prix_declinaison }} €</small>
                                  <div class="input-group">
                                     <button class="btn  btn-success"  id="button-addon1">
                                             <i class="bi bi-cart"></i>

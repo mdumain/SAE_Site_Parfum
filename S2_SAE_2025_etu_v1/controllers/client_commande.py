@@ -14,15 +14,15 @@ client_commande = Blueprint('client_commande', __name__,
 def client_commande_valide():
     mycursor = get_db().cursor()
     id_client = session['id_user']
-    sql = '''SELECT * FROM ligne_panier JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum'''
+    sql = '''SELECT * FROM ligne_panier JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum'''
     mycursor.execute(sql)
     articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:
         sql = ''' 
-        SELECT SUM(prix_parfum * quantite) AS prix_total
+        SELECT SUM(prix_declinaison * quantite) AS prix_total
         FROM ligne_panier 
-            JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum 
+            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
         WHERE utilisateur_id = %s 
         '''
         mycursor.execute(sql, id_client)
@@ -46,13 +46,13 @@ def client_commande_add():
     # choix de(s) (l')adresse(s)
 
     id_client = session['id_user']
-    sql = ''' SELECT * FROM ligne_panier JOIN parfum ON ligne_panier.parfum_id = parfum.id_parfum WHERE utilisateur_id = %s'''
+    sql = ''' SELECT * FROM ligne_panier JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum WHERE utilisateur_id = %s'''
     mycursor.execute(sql, id_client)
     items_ligne_panier = mycursor.fetchall()
     if items_ligne_panier is None or len(items_ligne_panier) < 1:
         flash(u'Pas d\'articles dans le ligne_panier', 'alert-warning')
         return redirect('/client/article/show')
-                                          # https://pynative.com/python-mysql-transaction-management-using-commit-rollback/
+                                          #https://pynative.com/python-mysql-transaction-management-using-commit-rollback/
     date = datetime.now()
     a = datetime.strptime(f"{date.month} {date.day} {date.year} {date.hour}:{date.minute}", "%m %d %Y %H:%M")
 
@@ -64,10 +64,10 @@ def client_commande_add():
     mycursor.execute(sql)
     last_insert_id = mycursor.fetchone()['id_commande']
     for item in items_ligne_panier:
-        sql = '''DELETE FROM ligne_panier WHERE utilisateur_id = %s AND parfum_id = %s'''
-        mycursor.execute(sql, (id_client, item['parfum_id']))
+        sql = '''DELETE FROM ligne_panier WHERE utilisateur_id = %s AND declinaison_id = %s'''
+        mycursor.execute(sql, (id_client, item['declinaison_id']))
         sql = '''INSERT INTO ligne_commande VALUE (%s, %s, %s, %s)'''
-        mycursor.execute(sql, (last_insert_id, item['parfum_id'], item['prix_parfum'], item['quantite']))
+        mycursor.execute(sql, (last_insert_id, item['declinaison_id'], item['prix_declinaison'], item['quantite']))
 
     get_db().commit()
     flash(u'Commande ajoutée','alert-success')
@@ -81,10 +81,11 @@ def client_commande_show():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     sql = '''  
-    SELECT commande.id_commande, commande.id_etat, etat.libelle_etat, date_achat, SUM(prix_parfum * quantite) AS prix_total, SUM(quantite) AS nbr_articles
+    SELECT commande.id_commande, commande.id_etat, etat.libelle_etat, date_achat, SUM(prix_declinaison * quantite) AS prix_total, SUM(quantite) AS nbr_articles
     FROM commande 
     JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande 
-    JOIN parfum ON ligne_commande.parfum_id = parfum.id_parfum
+    JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
+    JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
     JOIN etat ON commande.id_etat = etat.id_etat
     WHERE id_utilisateur = %s 
     GROUP BY commande.id_commande, id_etat, date_achat
@@ -99,11 +100,14 @@ def client_commande_show():
     if id_commande != None:
         print(id_commande)
         sql = '''
-        SELECT nom_parfum, prix_parfum, quantite, SUM(quantite * prix_parfum) AS prix_ligne
-        FROM ligne_commande 
-        JOIN parfum ON ligne_commande.parfum_id = parfum.id_parfum
+        SELECT nom_parfum, nom_volume, prix_declinaison, quantite, SUM(quantite * prix_declinaison) AS prix_ligne,
+       (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_dec
+        FROM ligne_commande
+            JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
+            JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
+            JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
         WHERE id_commande = %s
-        GROUP BY nom_parfum, prix_parfum, quantite; 
+        GROUP BY nom_parfum, prix_declinaison, quantite, nom_volume, nb_dec
         '''
         mycursor.execute(sql, id_commande)
         articles_commande = mycursor.fetchall()
