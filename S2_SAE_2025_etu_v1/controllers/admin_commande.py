@@ -25,14 +25,14 @@ def admin_commande_show():
 
     sql = '''
     SELECT utilisateur.login, commande.id_etat AS etat_id, commande.date_achat, 
-               COUNT(ligne_commande.id_commande) AS nbr_articles, 
-               etat.libelle_etat AS libelle, SUM(ligne_commande.prix * ligne_commande.quantite) AS prix_total , commande.id_commande
-        FROM commande
-        JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande
-        JOIN etat ON commande.id_etat = etat.id_etat
-        JOIN utilisateur ON commande.id_utilisateur=utilisateur.id_utilisateur
-        GROUP BY commande.id_commande, commande.id_etat, commande.date_achat, etat.libelle_etat
-        ORDER BY  commande.id_etat ASC, commande.date_achat ASC
+        COUNT(ligne_commande.id_commande) AS nbr_articles, etat.libelle_etat AS libelle,
+        SUM(ligne_commande.prix * ligne_commande.quantite) AS prix_total , commande.id_commande
+    FROM commande
+    JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande
+    JOIN etat ON commande.id_etat = etat.id_etat
+    JOIN utilisateur ON commande.id_utilisateur=utilisateur.id_utilisateur
+    GROUP BY commande.id_commande, commande.id_etat, commande.date_achat, etat.libelle_etat
+    ORDER BY  commande.id_etat ASC, commande.date_achat ASC
     '''
 
     mycursor.execute(sql, commandes)
@@ -40,14 +40,17 @@ def admin_commande_show():
     commandes=mycursor.fetchall()
     commande_adresses = None
     if id_commande != None:
-        sql = '''  SELECT parfum.nom_parfum AS nom  , ligne_commande.quantite, ligne_commande.prix , ligne_commande.quantite * ligne_commande.prix AS prix_ligne
+        sql = '''  
+        SELECT prix_declinaison, nom_parfum, nom_volume, quantite, id_volume, ligne_commande.quantite * declinaison_parfum.prix_declinaison AS prix_ligne,
+        (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_declinaison
         FROM commande
-        JOIN ligne_commande ON commande.id_commande=ligne_commande.id_commande
-        JOIN parfum ON ligne_commande.parfum_id=parfum.id_parfum
-        
-        WHERE %s = commande.id_commande  '''
+        JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande
+        JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
+        JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
+        JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
+        WHERE commande.id_commande = %s;
+        '''
         mycursor.execute(sql, id_commande)
-
         articles_commande = mycursor.fetchall()
     return render_template('admin/commandes/show.html'
                            , commandes=commandes

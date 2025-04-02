@@ -19,11 +19,6 @@ def get_db():
         )
     return g.db
 
-def close_db(exception=None):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()  # Ferme la connexion
-
 def activate_db_options(db):
     cursor = db.cursor()
     # Vérifier et activer l'option ONLY_FULL_GROUP_BY si nécessaire

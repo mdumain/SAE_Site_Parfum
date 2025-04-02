@@ -22,7 +22,7 @@
             <ul>
                 {% for item_declinaison in declinaisons  %}
                     <li>
-                    {% if item_declinaison.id_volume is defined%}
+                    {% if item_declinaison.id_volume is defined %}
                         volume : <stong style="color:{{ item_declinaison.code_couleur }}">{{ item_declinaison.nom_volume }}</stong>
                     {% endif %}
                     {% if item_declinaison.id_taille is defined and  item_declinaison.id_taille > 1 %}

@@ -17,9 +17,12 @@ admin_article = Blueprint('admin_article', __name__,
 @admin_article.route('/admin/article/show')
 def show_article():
     mycursor = get_db().cursor()
-    sql = '''  SELECT parfum.nom_parfum AS nom, parfum.id_parfum AS id_article, genre.nom_genre AS libelle, parfum.genre_id AS type_article_id ,parfum.prix_parfum AS prix, parfum.stock AS stock, parfum.image AS image
+    sql = '''  SELECT parfum.nom_parfum AS nom, parfum.id_parfum AS id_article, genre.nom_genre AS libelle, parfum.genre_id AS type_article_id ,declinaison_parfum.prix_declinaison AS prix, declinaison_parfum.stock AS stock, parfum.image AS image,
+    (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_declinaisons, volume.nom_volume
     FROM parfum
     JOIN genre ON parfum.genre_id = genre.id_genre
+    JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
+    JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
     ORDER BY parfum.nom_parfum ASC;
     '''
     mycursor.execute(sql)

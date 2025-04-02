@@ -46,7 +46,11 @@ def client_commande_add():
     # choix de(s) (l')adresse(s)
 
     id_client = session['id_user']
-    sql = ''' SELECT * FROM ligne_panier JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum WHERE utilisateur_id = %s'''
+    sql = '''
+    SELECT * 
+    FROM ligne_panier 
+    JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
+    WHERE utilisateur_id = %s'''
     mycursor.execute(sql, id_client)
     items_ligne_panier = mycursor.fetchall()
     if items_ligne_panier is None or len(items_ligne_panier) < 1:

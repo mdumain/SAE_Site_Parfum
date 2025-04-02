@@ -21,9 +21,8 @@ def client_panier_add():
     # ajout dans le panier d'une déclinaison d'un article (si 1 declinaison : immédiat sinon => vu pour faire un choix
     if id_declinaison_article is None:
         sql = '''
-        SELECT * 
-        FROM declinaison_parfum
-        JOIN volume ON declinaison_parfum.volume_id = volume.id_volume 
+        SELECT * FROM declinaison_parfum 
+        JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
         WHERE id_parfum = %s'''
         mycursor.execute(sql, id_article)
         declinaisons = mycursor.fetchall()

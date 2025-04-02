@@ -22,16 +22,13 @@ from controllers.admin_dataviz import *
 from controllers.admin_commentaire import *
 from controllers.client_liste_envies import *
 
-from connexion_db import close_db
-
 app = Flask(__name__)
 app.secret_key = 'une cle(token) : grain de sel(any random string)'
 
-app.teardown_appcontext(close_db)
 
 @app.teardown_appcontext
 def close_connection(exception):
-    db = getattr(g, '_database', None)
+    db = g.pop('db', None)
     if db is not None:
         db.close()
 
