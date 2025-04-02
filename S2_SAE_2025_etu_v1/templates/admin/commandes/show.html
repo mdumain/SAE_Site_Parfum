@@ -10,12 +10,12 @@
                 <tbody>
                         {% for ligne in articles_commande %}
                              <tr>
-                                <td>{{ ligne.nom }}
-                                {% if ligne.nb_declinaisons is defined and ligne.nb_declinaisons > 1 %}
-                                    <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaisons }} declinaisons )</span>
+                                <td>{{ ligne.nom_parfum }}
+                                {% if ligne.nb_declinaison is defined and ligne.nb_declinaison > 1 %}
+                                    <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaison }} declinaisons )</span>
                                     <span style="color:#6dcea2">
-                                    {% if ligne.couleur_id != 1 %}
-                                        {{ ligne.libelle_couleur }}
+                                    {% if ligne.id_volume is defined %}
+                                        {{ ligne.nom_volume }}
                                     {% endif %}
                                     </span>
                                     <span  style="color:#d941c2">
@@ -26,7 +26,7 @@
                                 {% endif %}
                                 </td>
                                 <td>{{ ligne.quantite }}</td>
-                                <td>{{ ligne.prix }} €</td>
+                                <td>{{ ligne.prix_declinaison }} €</td>
                                 <td>{{ ligne.prix_ligne }} €  </td>
                             </tr>
                         {% endfor %}
