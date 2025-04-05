@@ -66,7 +66,7 @@ articles (tableau de dictionnaires)
                  {# <td>{{ ligne.date_create }} {{ ligne.date_create.strftime('%d-%m-%Y') }} </td> #}
                   <td>
                       {% if ligne.nb_declinaisons is defined %}
-                        {{ ligne.nb_declinaisons }} - {{ ligne.nom_volume }}
+                        {{ ligne.nb_declinaisons }}
                       {% else %}
                          decli ND
                       {% endif %}

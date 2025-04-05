@@ -41,7 +41,7 @@ def admin_commande_show():
     commande_adresses = None
     if id_commande != None:
         sql = '''  
-        SELECT prix_declinaison, nom_parfum, nom_volume, quantite, id_volume, ligne_commande.quantite * declinaison_parfum.prix_declinaison AS prix_ligne,
+        SELECT prix_parfum, nom_parfum, nom_volume, quantite, id_volume, ligne_commande.quantite * prix_parfum AS prix_ligne,
         (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_declinaison
         FROM commande
         JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande

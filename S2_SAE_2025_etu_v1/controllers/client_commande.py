@@ -20,9 +20,10 @@ def client_commande_valide():
 
     if len(articles_panier) >= 1:
         sql = ''' 
-        SELECT SUM(prix_declinaison * quantite) AS prix_total
+        SELECT SUM(prix_parfum * quantite) AS prix_total
         FROM ligne_panier 
-            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
+            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum
+            JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum 
         WHERE utilisateur_id = %s 
         '''
         mycursor.execute(sql, id_client)
@@ -85,7 +86,7 @@ def client_commande_show():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     sql = '''  
-    SELECT commande.id_commande, commande.id_etat, etat.libelle_etat, date_achat, SUM(prix_declinaison * quantite) AS prix_total, SUM(quantite) AS nbr_articles
+    SELECT commande.id_commande, commande.id_etat, etat.libelle_etat, date_achat, SUM(prix_parfum * quantite) AS prix_total, SUM(quantite) AS nbr_articles
     FROM commande 
     JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande 
     JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
@@ -104,14 +105,14 @@ def client_commande_show():
     if id_commande != None:
         print(id_commande)
         sql = '''
-        SELECT nom_parfum, nom_volume, prix_declinaison, quantite, SUM(quantite * prix_declinaison) AS prix_ligne,
+        SELECT nom_parfum, nom_volume, prix_parfum, quantite, SUM(quantite * prix_parfum) AS prix_ligne,
        (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_dec
         FROM ligne_commande
             JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
             JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
             JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
         WHERE id_commande = %s
-        GROUP BY nom_parfum, prix_declinaison, quantite, nom_volume, nb_dec
+        GROUP BY nom_parfum, prix_parfum, quantite, nom_volume, nb_dec
         '''
         mycursor.execute(sql, id_commande)
         articles_commande = mycursor.fetchall()

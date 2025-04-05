@@ -64,7 +64,7 @@ types_article : tableau de dictionnaires
                     </div>
                     <table class="table table-hover table-responsive">
 
-                        <th style="width: 300px">taille</th>
+                        <th style="width: 300px">volume</th>
                         <th style="width: 300px">couleur</th>
                         <th style="width: 300px">stock</th>
                         <th style="width: 300px">opérations</th>
@@ -80,7 +80,7 @@ types_article : tableau de dictionnaires
                             {% for declinaison_article in declinaisons_article %}
                                 <tr>
                                     <td>
-                                        {{ declinaison_article.libelle_taille }}
+                                        {{ declinaison_article.nom_volume }}
                                     </td>
                                     <td>
                                         {{ declinaison_article.libelle_couleur }}

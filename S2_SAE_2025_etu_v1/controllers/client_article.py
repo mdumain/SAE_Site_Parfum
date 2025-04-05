@@ -31,9 +31,10 @@ def client_article_show():                                 # remplace client_ind
     param = []
 
     sql = ''' 
-    SELECT parfum.*, genre.*, SUM(stock) AS stock, COUNT(id_declinaison_parfum) AS nb_dec, MIN(prix_declinaison) AS prix_parfum FROM parfum
-                    JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
-                    JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1
+    SELECT parfum.*, genre.*, SUM(stock) AS stock, COUNT(id_declinaison_parfum) AS nb_dec,prix_parfum
+    FROM parfum
+    JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
+    JOIN genre ON parfum.genre_id = genre.id_genre WHERE 1=1
     '''
 
     if "filter_word" in session.keys() and filter_word != '':
@@ -103,9 +104,10 @@ def client_article_show():                                 # remplace client_ind
 
     if len(articles_panier) >= 1:
         sql = ''' 
-        SELECT SUM(prix_declinaison * quantite) AS prix_total
+        SELECT SUM(prix_parfum * quantite) AS prix_total
         FROM ligne_panier 
-            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
+            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum
+            JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum 
         WHERE utilisateur_id = %s 
         '''
         mycursor.execute(sql, (id_client))
