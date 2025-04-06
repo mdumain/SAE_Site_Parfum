@@ -25,8 +25,8 @@
                     {% if item_declinaison.id_volume is defined %}
                         volume : <stong style="color:{{ item_declinaison.code_couleur }}">{{ item_declinaison.nom_volume }}</stong>
                     {% endif %}
-                    {% if item_declinaison.id_taille is defined and  item_declinaison.id_taille > 1 %}
-                      - taille : <span> {{ item_declinaison.libelle_taille }}</span>
+                    {% if item_declinaison.couleur_id is defined and  item_declinaison.couleur_id > 1 %}
+                      - couleur : <span> {{ item_declinaison.libelle }}</span>
                     {% endif %}
                     {% if item_declinaison.stock is defined and item_declinaison.stock != None %}
                         {% if item_declinaison.stock > 0 %}

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ligne_commande, ligne_panier, declinaison_parfum, parfum, conditionnement, volume, genre, commande, etat, utilisateur, fournisseur, marque;
+DROP TABLE IF EXISTS ligne_commande, ligne_panier, declinaison_parfum, parfum, conditionnement, volume, couleur, genre, commande, etat, utilisateur, fournisseur, marque;
 
 CREATE TABLE utilisateur(
         id_utilisateur INT PRIMARY KEY AUTO_INCREMENT,
@@ -64,6 +64,18 @@ INSERT INTO volume VALUES
     (Null,"200ml"),
     (Null, "150ml"),
     (Null, "250ml");
+
+CREATE TABLE couleur(
+    id_couleur INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(25)
+);
+
+INSERT INTO couleur(libelle) VALUES
+    ('Unique'),
+    ('Rouge'),
+    ('Bleu'),
+    ('Vert'),
+    ('Jaune');
 
 CREATE TABLE fournisseur(
     id_fournisseur INT AUTO_INCREMENT PRIMARY KEY,
@@ -143,46 +155,50 @@ INSERT INTO parfum (id_parfum, nom_parfum, conditionnement_id, genre_id, marque_
     (NULL, "Green Tea", 1, 3, 16, 3, "Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.", "green_tea.jpg", 30),
     (NULL, "Citrus Splash", 1, 3, 17, 3, "Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.", "citrus_splash.jpg", 25);
 
-SELECT last_insert_id();
-
 CREATE TABLE declinaison_parfum(
     id_declinaison_parfum INT AUTO_INCREMENT,
     id_parfum INT,
     stock INT,
     volume_id INT,
+    couleur_id INT,
     PRIMARY KEY (id_declinaison_parfum, id_parfum),
     FOREIGN KEY (id_parfum) REFERENCES parfum(id_parfum),
-    FOREIGN KEY (volume_id) REFERENCES volume(id_volume)
+    FOREIGN KEY (volume_id) REFERENCES volume(id_volume),
+    FOREIGN KEY (couleur_id) REFERENCES couleur(id_couleur)
 );
 
-INSERT INTO declinaison_parfum (id_parfum, stock, volume_id) VALUES
-    (1, 84, 3),
-    (1, 113, 4),
-    (2, 69, 2),
-    (3, 97, 1),
-    (4, 25, 3),
-    (5, 87, 1),
-    (6, 64, 4),
-    (7, 65, 4),
-    (8, 57, 4),
-    (9, 111, 2),
-    (10, 102, 3),
-    (11, 19, 1),
-    (12, 0, 2),
-    (13, 1, 2),
-    (14, 26, 5),
-    (15, 37, 2),
-    (16, 48, 6),
-    (17, 59, 4),
-    (18, 70, 2),
-    (19, 81, 7),
-    (20, 92, 4),
-    (21, 3, 5),
-    (22, 4, 6),
-    (23, 5, 4),
-    (24, 6, 8),
-    (25, 7, 4),
-    (26, 8, 4);
+INSERT INTO declinaison_parfum (id_parfum, stock, volume_id, couleur_id) VALUES
+    (1, 84, 3, 3),
+    (1, 0, 5, 3),
+    (1, 113, 4, 2),
+    (2, 69, 2, 1),
+    (3, 97, 1, 1),
+    (4, 25, 3, 1),
+    (5, 87, 1, 1),
+    (6, 64, 4, 1),
+    (7, 65, 4, 4),
+    (8, 57, 4, 1),
+    (9, 111, 2, 1),
+    (10, 102, 3, 1),
+    (11, 19, 1, 1),
+    (12, 0, 2, 1),
+    (13, 1, 2, 3),
+    (14, 26, 5, 1),
+    (15, 37, 2, 1),
+    (16, 48, 6, 1),
+    (17, 59, 4, 1),
+    (18, 70, 2, 1),
+    (19, 81, 7, 4),
+    (19, 81, 5, 4),
+    (19, 81, 3, 2),
+    (19, 81, 7, 2),
+    (20, 92, 4, 1),
+    (21, 3, 5, 1),
+    (22, 4, 6, 1),
+    (23, 5, 4, 1),
+    (24, 6, 8, 1),
+    (25, 7, 4, 1),
+    (26, 8, 4, 1);
 
 CREATE TABLE commande(
     id_commande INT AUTO_INCREMENT PRIMARY KEY,
@@ -220,10 +236,3 @@ CREATE TABLE ligne_panier(
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     FOREIGN KEY (declinaison_id) REFERENCES declinaison_parfum(id_declinaison_parfum)
 );
-
-SELECT CONCAT(nom_parfum, ' ', nom_volume) AS label, SUM(stock * parfum.prix_parfum) AS value
-FROM parfum
-JOIN declinaison_parfum dp on parfum.id_parfum = dp.id_parfum
-JOIN volume v on dp.volume_id = v.id_volume
-GROUP BY nom_parfum, nom_volume
-ORDER BY nom_parfum;

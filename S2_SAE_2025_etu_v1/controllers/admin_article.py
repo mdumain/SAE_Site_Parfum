@@ -19,7 +19,8 @@ admin_article = Blueprint('admin_article', __name__,
 def show_article():
     mycursor = get_db().cursor()
     sql = '''  SELECT parfum.nom_parfum AS nom, parfum.id_parfum AS id_article, genre.nom_genre AS libelle, parfum.genre_id AS type_article_id ,prix_parfum AS prix, SUM(stock) AS stock, parfum.image AS image,
-     (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_declinaisons
+     (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_declinaisons,
+     (SELECT MIN(stock) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS min_stock
     FROM parfum
     LEFT JOIN genre ON parfum.genre_id = genre.id_genre
     LEFT JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
@@ -43,9 +44,16 @@ def add_article():
     mycursor.execute(sql)
     volumes = mycursor.fetchall()
 
+    sql = '''
+    SELECT * FROM couleur
+    '''
+    mycursor.execute(sql)
+    couleurs = mycursor.fetchall()
+
     return render_template('admin/article/add_article.html'
                            ,types_article=type_article
                            ,volumes=volumes
+                           ,couleurs=couleurs
                             )
 
 
@@ -59,6 +67,7 @@ def valid_add_article():
     description = request.form.get('description', '')
     image = request.files.get('image', '')
     volume = request.form.get('volume_id', '')
+    couleur = request.form.get('couleur_id', '')
     stock = request.form.get('stock', '')
 
     if image:
@@ -77,13 +86,13 @@ def valid_add_article():
     mycursor.execute(sql)
     id_parfum = mycursor.fetchone()['last_insert_id']
 
-    tuple_add = (id_parfum, stock, volume)
-    sql = ''' INSERT INTO declinaison_parfum(id_parfum, stock, volume_id) VALUES (%s, %s, %s);'''
+    tuple_add = (id_parfum, stock, volume, couleur)
+    sql = ''' INSERT INTO declinaison_parfum(id_parfum, stock, volume_id, couleur_id) VALUES (%s, %s, %s, %s);'''
     mycursor.execute(sql, tuple_add)
 
     get_db().commit()
 
-    message = u'article ajouté , nom:' + nom + '- type_article:' + type_article_id + ' - prix:' + prix + ' - description:' + description + ' -stock:' + stock + '- image:' + str(
+    message = u'article ajouté , nom:' + nom + '- type_article:' + type_article_id + ' - prix:' + prix + ' - volume:' + volume + ' - couleur:' + couleur + ' - description:' + description + ' -stock:' + stock + '- image:' + str(
         image)
     flash(message, 'alert-success')
     return redirect('/admin/article/show')
@@ -93,6 +102,21 @@ def valid_add_article():
 def delete_article():
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
+
+    sql = '''
+    SELECT *
+    FROM parfum
+    JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
+    JOIN ligne_panier ON declinaison_parfum.id_declinaison_parfum = ligne_panier.declinaison_id
+    JOIN ligne_commande ON declinaison_parfum.id_declinaison_parfum = ligne_commande.declinaison_id
+    WHERE parfum.id_parfum = %s
+    '''
+    mycursor.execute(sql, id_article)
+    lignes = mycursor.fetchall()
+    if lignes is not None and len(lignes) > 0:
+        flash("Article dans un panier / déjà commandé", 'alert-warning')
+        redirect('/admin/article/show')
+
     sql = '''
     SELECT COUNT(id_declinaison_parfum) AS nb_declinaison
     FROM parfum JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum 
@@ -134,7 +158,7 @@ def edit_article():
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
-    print(article)
+
     sql = '''
     SELECT id_genre AS id_type_article, nom_genre AS libelle FROM genre; 
     '''
@@ -145,6 +169,7 @@ def edit_article():
     SELECT *
     FROM declinaison_parfum
     JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
+    JOIN couleur ON declinaison_parfum.couleur_id = couleur.id_couleur
     WHERE id_parfum = %s
     '''
     mycursor.execute(sql, id_article)

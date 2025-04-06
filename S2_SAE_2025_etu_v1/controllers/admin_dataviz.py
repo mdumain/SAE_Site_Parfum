@@ -11,26 +11,45 @@ admin_dataviz = Blueprint('admin_dataviz', __name__,
 @admin_dataviz.route('/admin/dataviz/etat1')
 def show_type_article_stock():
     mycursor = get_db().cursor()
-    sql = '''
-    SELECT CONCAT(nom_parfum, ' ', nom_volume) AS label, stock, SUM(stock * parfum.prix_parfum) AS value
-    FROM parfum
-    LEFT JOIN declinaison_parfum dp on parfum.id_parfum = dp.id_parfum
-    LEFT JOIN volume v on dp.volume_id = v.id_volume
-    GROUP BY nom_parfum, nom_volume, stock
-    ORDER BY nom_parfum;
-    '''
+
+    # Récupérer la liste des articles
+    sql = 'SELECT id_parfum, nom_parfum FROM parfum'
     mycursor.execute(sql)
+    articles = mycursor.fetchall()
+
+    # Récupérer l'article sélectionné
+    article_id = request.args.get('article')
+
+    if article_id:
+        sql = '''
+        SELECT CONCAT(nom_parfum, ' ', nom_volume, ' ', libelle) AS label, stock, SUM(stock * parfum.prix_parfum) AS value
+        FROM parfum
+        LEFT JOIN declinaison_parfum dp on parfum.id_parfum = dp.id_parfum
+        LEFT JOIN volume v on dp.volume_id = v.id_volume
+        LEFT JOIN sae.couleur c on dp.couleur_id = c.id_couleur
+        WHERE parfum.id_parfum = %s
+        GROUP BY nom_parfum, nom_volume, stock, libelle
+        ORDER BY nom_parfum;
+        '''
+        mycursor.execute(sql, (article_id,))
+    else:
+        sql = '''
+        SELECT CONCAT(nom_parfum, ' ', nom_volume, ' ', libelle) AS label, stock, SUM(stock * parfum.prix_parfum) AS value
+        FROM parfum
+        LEFT JOIN declinaison_parfum dp on parfum.id_parfum = dp.id_parfum
+        LEFT JOIN volume v on dp.volume_id = v.id_volume
+        LEFT JOIN sae.couleur c on dp.couleur_id = c.id_couleur
+        GROUP BY nom_parfum, nom_volume, stock, libelle
+        ORDER BY nom_parfum;
+        '''
+        mycursor.execute(sql)
+
     datas_show = mycursor.fetchall()
     labels = [str(row['label']) for row in datas_show]
     values = [float(row['value']) for row in datas_show]
     stock = [float(row['stock']) for row in datas_show]
 
-
-    return render_template('admin/dataviz/dataviz_etat_1.html'
-                           , datas_show=datas_show
-                           , labels=labels
-                           , values=values
-                           , stock = stock)
+    return render_template('admin/dataviz/dataviz_etat_1.html', datas_show=datas_show, labels=labels, values=values, stock=stock, articles=articles)
 
 
 # sujet 3 : adresses

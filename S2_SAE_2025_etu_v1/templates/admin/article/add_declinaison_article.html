@@ -20,6 +20,15 @@
                     <div>!</div><div><strong>Une couleur unique est définie </strong></div>
                     <input type="hidden" name="couleur" value="1">
                 {% else %}
+                    <label for="couleur">Couleur :
+                    <select name="couleur" required class="form-select">
+                        <option value="">Sélectionner une couleur</option>
+                        {% for couleur in couleurs %}
+                             <option value="{{ couleur.id_couleur }}"> {{ couleur.libelle }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                {% endif %}
                 <label for="volume">Volume :
                     <select name="volume" required class="form-select">
                         <option value="">Sélectionner un volume</option>
@@ -28,7 +37,6 @@
                         {% endfor %}
                     </select>
                 </label>
-                {% endif %}
                 <label for="submit">
                     <input name="submit" type="submit" value="Ajouter" class="btn btn-primary mt-2">
                 </label>

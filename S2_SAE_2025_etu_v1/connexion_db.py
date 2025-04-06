@@ -11,7 +11,7 @@ def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
             host="localhost",
-            user="admin",
+            user="root",
             password="mdp1",
             database="sae",
             charset='utf8mb4',

@@ -25,16 +25,25 @@
                           <div>il faut faut la supprimer pour modifier la couleur</div>
                         <input type="hidden" name="couleur" value="1">
                     {% else %}
-                    <label for="id_volume"> couleur :
-                        <select name="id_volume" class="form-select">
-                            {% for volume in volumes %}
-                                 <option value="{{ volume.id_volume }}"
-                                         {% if volume.id_volume == declinaison_article.volume_id %} selected {% endif %}
-                                 > {{ volume.nom_volume }}</option>
+                    <label for="id_couleur"> couleur :
+                        <select name="id_couleur" class="form-select">
+                            {% for couleur in couleurs %}
+                                 <option value="{{ couleur.id_couleur }}"
+                                         {% if couleur.id_couleur == declinaison_article.couleur_id %} selected {% endif %}
+                                 > {{ couleur.libelle }}</option>
                             {% endfor %}
                         </select>
                     </label>
                     {% endif %}
+                    <label for="id_volume"> volume :
+                        <select name="id_volume" class="form-select">
+                            {% for volume in volumes %}
+                                <option value="{{ volume.id_volume }}"
+                                        {% if volume.id_volume == declinaison_article.volume_id %} selected {% endif %}
+                                > {{ volume.nom_volume }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
                     <br>
                 <label for="submit">
                     <input name="submit" type="submit" value="Modifier" class="btn btn-primary mt-2">

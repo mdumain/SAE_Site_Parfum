@@ -19,15 +19,15 @@
                                     {% endif %}
                                     </span>
                                     <span  style="color:#d941c2">
-                                    {% if ligne.taille_id != 1 %}
-                                        {{ ligne.libelle_taille }}
+                                    {% if ligne.couleur_id != 1 %}
+                                        {{ ligne.libelle }}
                                     {% endif %}
                                     </span>
                                 {% endif %}
                                 </td>
                                 <td>{{ ligne.quantite }}</td>
-                                <td>{{ ligne.prix_parfum }} €</td>
-                                <td>{{ ligne.prix_ligne }} €  </td>
+                                <td>{{ ligne.prix }} €</td>
+                                <td>{{ ligne.prix_ligne }} €</td>
                             </tr>
                         {% endfor %}
 

@@ -21,7 +21,15 @@
 <br>
     <h2>Stock et valeur par déclinaison</h2>
 {#    <span style="color: red;">{{ cout_total.nbr_articles }}</span></h2>#}
-
+    <form method="GET" action="{{ url_for('admin_dataviz.show_type_article_stock') }}">
+        <label for="article">Choisir un article :</label>
+        <select name="article" id="article">
+            {% for article in articles %}
+                <option value="{{ article.id_parfum }}">{{ article.nom_parfum }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Comparer</button>
+    </form>
 <table class="table table-striped">
     <thead class="table-light">
         <tr>

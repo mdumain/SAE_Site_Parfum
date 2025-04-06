@@ -31,11 +31,19 @@
                         {% endfor %}
                     </select>
                 </label>
-                <label for="volume_id">Type de l'article :
+                <label for="volume_id">Volume de l'article :
                     <select name="volume_id" required class="form-select">
                         <option value="">Sélectionner un volume</option>
                         {% for type in volumes %}
                             <option value="{{ type.id_volume }}"> {{ type.nom_volume }} </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label for="couleur_id">Couleur de l'article :
+                    <select name="couleur_id" required class="form-select">
+                        <option value="">Sélectionner une couleur</option>
+                        {% for type in couleurs %}
+                            <option value="{{ type.id_couleur }}"> {{ type.libelle }} </option>
                         {% endfor %}
                     </select>
                 </label>

@@ -12,9 +12,9 @@ fixtures_load = Blueprint("fixtures_load", __name__,
 @fixtures_load.route("/base/init")
 def fct_fixtures_load():
     mycursor = get_db().cursor()
-    sql = '''DROP TABLE IF EXISTS ligne_commande, ligne_panier, declinaison_parfum, parfum, conditionnement, volume, genre, commande, etat, utilisateur, fournisseur, marque;'''
-
+    sql = '''DROP TABLE IF EXISTS ligne_commande, ligne_panier, declinaison_parfum, parfum, conditionnement, volume, couleur, genre, commande, etat, utilisateur, fournisseur, marque;'''
     mycursor.execute(sql)
+
     sql = '''
     CREATE TABLE utilisateur(
         id_utilisateur INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,10 +24,10 @@ def fct_fixtures_load():
         role VARCHAR(50),
         nom VARCHAR(50),
         est_actif BOOLEAN
-      )DEFAULT CHARSET utf8;  
+    )DEFAULT CHARSET utf8;
     '''
     mycursor.execute(sql)
-    sql = ''' 
+    sql = '''
     INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
         (1,'admin','admin@admin.fr',
             'pbkdf2:sha256:1000000$eQDrpqICHZ9eaRTn$446552ca50b5b3c248db2dde6deac950711c03c5d4863fe2bd9cef31d5f11988',
@@ -41,57 +41,57 @@ def fct_fixtures_load():
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE genre(
         id_genre INT AUTO_INCREMENT PRIMARY KEY,
         nom_genre VARCHAR(25)
-    )  DEFAULT CHARSET utf8;  
+    )  DEFAULT CHARSET utf8;
     '''
     mycursor.execute(sql)
-    sql = ''' 
-    INSERT INTO genre VALUES 
-        (Null,"Homme"), 
-        (Null,"Femme"), 
+    sql = '''
+    INSERT INTO genre VALUES
+        (Null,"Homme"),
+        (Null,"Femme"),
         (Null,"Mixte");
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE etat (
         id_etat INT AUTO_INCREMENT PRIMARY KEY,
         libelle_etat VARCHAR(50)
-    )  DEFAULT CHARSET=utf8;  
+    )  DEFAULT CHARSET=utf8;
     '''
     mycursor.execute(sql)
-    sql = ''' 
-    INSERT INTO etat VALUES 
+    sql = '''
+    INSERT INTO etat VALUES
         (Null,"En attente"),
         (Null,"Expédié");
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
-        CREATE TABLE conditionnement (
-            id_conditionnement INT AUTO_INCREMENT PRIMARY KEY,
-            libelle_conditionnement VARCHAR(50)
-        )  DEFAULT CHARSET=utf8;  
+    sql = '''
+    CREATE TABLE conditionnement (
+        id_conditionnement INT AUTO_INCREMENT PRIMARY KEY,
+        libelle_conditionnement VARCHAR(50)
+    )  DEFAULT CHARSET=utf8;
     '''
     mycursor.execute(sql)
-    sql = ''' 
-    INSERT INTO conditionnement VALUES 
+    sql = '''
+    INSERT INTO conditionnement VALUES
         (Null,"Verre"),
         (Null,"Alluminium");
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE volume (
         id_volume INT AUTO_INCREMENT PRIMARY KEY,
         nom_volume VARCHAR(25)
-    )  DEFAULT CHARSET=utf8;  
+    )  DEFAULT CHARSET=utf8;
     '''
     mycursor.execute(sql)
-    sql = ''' 
+    sql = '''
     INSERT INTO volume VALUES
         (Null,"30ml"),
         (Null,"50ml"),
@@ -104,29 +104,46 @@ def fct_fixtures_load():
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
+    CREATE TABLE couleur(
+        id_couleur INT AUTO_INCREMENT PRIMARY KEY,
+        libelle VARCHAR(25)
+    );
+    '''
+    mycursor.execute(sql)
+    sql = '''
+    INSERT INTO couleur(libelle) VALUES
+        ('Unique'),
+        ('Rouge'),
+        ('Bleu'),
+        ('Vert'),
+        ('Jaune');
+    '''
+    mycursor.execute(sql)
+
+    sql = '''
     CREATE TABLE fournisseur(
         id_fournisseur INT AUTO_INCREMENT PRIMARY KEY,
         nom_fournisseur VARCHAR(25)
     );
-'''
+    '''
     mycursor.execute(sql)
-    sql = ''' 
+    sql = '''
     INSERT INTO fournisseur VALUES
         (1, "ParfumCo"),
         (2, "LuxeParfums"),
-        (3, "EcoScents"); 
+        (3, "EcoScents");
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE marque(
         id_marque INT AUTO_INCREMENT PRIMARY KEY,
         nom_marque VARCHAR(25)
     );
     '''
     mycursor.execute(sql)
-    sql = ''' 
+    sql = '''
     INSERT INTO marque VALUES
         (1, "KIDS"),
         (2, "Dior"),
@@ -148,7 +165,7 @@ def fct_fixtures_load():
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE parfum(
         id_parfum INT AUTO_INCREMENT PRIMARY KEY,
         nom_parfum VARCHAR(50),
@@ -158,6 +175,7 @@ def fct_fixtures_load():
         fournisseur_id INT,
         description VARCHAR(1000),
         image VARCHAR(50),
+        prix_parfum DECIMAL(10,2),
         CONSTRAINT fk_parfum_marque FOREIGN KEY (marque_id) REFERENCES marque(id_marque),
         CONSTRAINT fk_parfum_fournisseur FOREIGN KEY (fournisseur_id) REFERENCES fournisseur(id_fournisseur),
         CONSTRAINT fk_parfum_conditionnement FOREIGN KEY (conditionnement_id) REFERENCES conditionnement(id_conditionnement),
@@ -165,34 +183,34 @@ def fct_fixtures_load():
     );
     '''
     mycursor.execute(sql)
-    sql = ''' 
-    INSERT INTO parfum (id_parfum, nom_parfum, conditionnement_id, genre_id, marque_id, fournisseur_id, description) VALUES
-        (NULL, "Spider-Man", 1, 1, 1, 1, "Un parfum dynamique et énergisant, inspiré par l'agilité et l'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois."),
-        (NULL, "Flash-McQueen", 1, 1, 1, 1, "Un parfum te rendant aussi rapide que la lumière, inspiré par la rapidité de Flash McQueen. Notes d'essence et de transpiration."),
-        (NULL, "Pat' Patrouille", 1, 1, 1, 1, "Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre."),
-        (NULL, "Barbaparfum", 1, 3, 9, 1, "Un parfum doux et réconfortant, inspiré par l'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc."),
-        (NULL, "Barbie", 1, 2, 1, 1, "Un parfum féminin et glamour, capturant l'essence de Barbie. Notes de fleurs roses, de framboise et de vanille."),
-        (NULL, "Sauvage", 2, 1, 2, 2, "Un parfum sauvage et intense, pour l'homme moderne et audacieux. Notes de bergamote, de poivre et d'ambroxan."),
-        (NULL, "Invictus", 1, 1, 8, 2, "Un parfum victorieux et puissant, pour ceux qui repoussent les limites. Notes de pamplemousse, de laurier et de bois ambré."),
-        (NULL, "Flora Gorgeous Magnolia", 1, 2, 3, 2, "Un parfum floral et élégant, inspiré par la beauté éclatante du magnolia. Notes de magnolia, de jasmin et de bois de santal."),
-        (NULL, "Spicebomb", 1, 1, 10, 3, "Un parfum explosif et épicé, pour les hommes qui osent. Notes de piment, de tabac et de cuir."),
-        (NULL, "Born in Roma Uomo", 1, 1, 11, 3, "Un parfum italien sophistiqué, capturant l'esprit de Rome. Notes de lavande, de géranium et de bois de vétiver."),
-        (NULL, "Coco Mademoiselle", 1, 2, 4, 2, "Un parfum intemporel et féminin, pour la femme moderne. Notes de rose, de patchouli et de vanille."),
-        (NULL, "The Most Wanted", 1, 1, 12, 3, "Un parfum audacieux et séduisant, pour les hommes qui attirent tous les regards. Notes de cardamome, de bois précieux et d'ambre."),
-        (NULL, "Black Opium", 1, 2, 5, 2, "Un parfum addictif et mystérieux, pour les femmes qui aiment briller dans l'ombre. Notes de café, de vanille et de fleurs blanches."),
-        (NULL, "Le Beau", 1, 1, 6, 2, "Un parfum frais et ensoleillé, pour l'homme moderne et élégant. Notes de noix de coco, de bergamote et de bois de cèdre."),
-        (NULL, "Ombre Leather", 1, 1, 7, 2, "Un parfum sombre et sensuel, inspiré par le cuir et les ombres mystérieuses. Notes de cuir, de violette et de patchouli."),
-        (NULL, "1 Million", 1, 1, 8, 2, "Un parfum luxueux et audacieux, pour ceux qui vivent sans limites. Notes de sangria, de rose et de cuir."),
-        (NULL, "J'adore", 2, 2, 2, 2, "Un parfum floral et ensoleillé, symbole de féminité et de grâce. Notes de jasmin, de rose et de ylang-ylang."),
-        (NULL, "Light Blue", 1, 3, 14, 2, "Un parfum frais et lumineux, inspiré par la Méditerranée. Notes de citron, de pomme et de cèdre."),
-        (NULL, "La Vie Est Belle", 1, 2, 13, 2, "Un parfum gourmand et optimiste, célébrant le bonheur de vivre. Notes de patchouli, d'iris et de vanille."),
-        (NULL, "Acqua di Gio", 1, 1, 5, 2, "Un parfum aquatique et rafraîchissant, inspiré par la mer Méditerranée. Notes de bergamote, de jasmin et de bois de santal."),
-        (NULL, "Le Male", 1, 1, 6, 2, "Un parfum iconique et viril, pour l'homme moderne et séduisant. Notes de lavande, de vanille et de menthe."),
-        (NULL, "Black Orchid", 1, 2, 7, 2, "Un parfum intense et mystérieux, pour les femmes qui osent être différentes. Notes de truffe, d'orchidée noire et de patchouli."),
-        (NULL, "Good Girl", 1, 2, 15, 2, "Un parfum audacieux et sensuel, pour la femme qui sait ce qu'elle veut. Notes de café, de tubéreuse et de vanille."),
-        (NULL, "Aventus", 1, 1, 9, 2, "Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d'ananas, de bouleau et de musc."),
-        (NULL, "Green Tea", 1, 3, 16, 3, "Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches."),
-        (NULL, "Citrus Splash", 1, 3, 17, 3, "Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.");
+    sql = '''
+    INSERT INTO parfum (id_parfum, nom_parfum, conditionnement_id, genre_id, marque_id, fournisseur_id, description, image, prix_parfum) VALUES
+        (NULL, "Spider-Man", 1, 1, 1, 1, "Un parfum dynamique et énergisant, inspiré par l'agilité et l'héroïsme de Spider-Man. Notes de citron, de gingembre et de bois.", "spiderman.jpg", 10),
+        (NULL, "Flash-McQueen", 1, 1, 1, 1, "Un parfum te rendant aussi rapide que la lumière, inspiré par la rapidité de Flash McQueen. Notes d'essence et de transpiration.", "flash.jpg", 9.98),
+        (NULL, "Pat' Patrouille", 1, 1, 1, 1, "Un parfum joyeux et ludique, parfait pour les enfants. Notes de fruits rouges, de vanille et de sucre.", "patpatrouille.jpg", 10),
+        (NULL, "Barbaparfum", 1, 3, 9, 1, "Un parfum doux et réconfortant, inspiré par l'univers coloré de Barbapapa. Notes de miel, de fleurs blanches et de musc.", "barbaparfum.jpg", 15),
+        (NULL, "Barbie", 1, 2, 1, 1, "Un parfum féminin et glamour, capturant l'essence de Barbie. Notes de fleurs roses, de framboise et de vanille.", "barbie.jpg", 5),
+        (NULL, "Sauvage", 2, 1, 2, 2, "Un parfum sauvage et intense, pour l'homme moderne et audacieux. Notes de bergamote, de poivre et d'ambroxan.", "sauvage.jpg", 60),
+        (NULL, "Invictus", 1, 1, 8, 2, "Un parfum victorieux et puissant, pour ceux qui repoussent les limites. Notes de pamplemousse, de laurier et de bois ambré.", "invictus.jpg", 95),
+        (NULL, "Flora Gorgeous Magnolia", 1, 2, 3, 2, "Un parfum floral et élégant, inspiré par la beauté éclatante du magnolia. Notes de magnolia, de jasmin et de bois de santal.", "gucci.jpg", 170),
+        (NULL, "Spicebomb", 1, 1, 10, 3, "Un parfum explosif et épicé, pour les hommes qui osent. Notes de piment, de tabac et de cuir.", "spiceBomb.jpg", 90),
+        (NULL, "Born in Roma Uomo", 1, 1, 11, 3, "Un parfum italien sophistiqué, capturant l'esprit de Rome. Notes de lavande, de géranium et de bois de vétiver.", "valentino.jpg", 60),
+        (NULL, "Coco Mademoiselle", 1, 2, 4, 2, "Un parfum intemporel et féminin, pour la femme moderne. Notes de rose, de patchouli et de vanille.", "coco_mademoiselle.jpg", 90),
+        (NULL, "The Most Wanted", 1, 1, 12, 3, "Un parfum audacieux et séduisant, pour les hommes qui attirent tous les regards. Notes de cardamome, de bois précieux et d'ambre.", "mostWanted.jpg", 54),
+        (NULL, "Black Opium", 1, 2, 5, 2, "Un parfum addictif et mystérieux, pour les femmes qui aiment briller dans l'ombre. Notes de café, de vanille et de fleurs blanches.", "black_opium.jpg", 74),
+        (NULL, "Le Beau", 1, 1, 6, 2, "Un parfum frais et ensoleillé, pour l'homme moderne et élégant. Notes de noix de coco, de bergamote et de bois de cèdre.", "le_beau.jpg", 104.99),
+        (NULL, "Ombre Leather", 1, 1, 7, 2, "Un parfum sombre et sensuel, inspiré par le cuir et les ombres mystérieuses. Notes de cuir, de violette et de patchouli.", "ombre_leather.jpg", 116),
+        (NULL, "1 Million", 1, 1, 8, 2, "Un parfum luxueux et audacieux, pour ceux qui vivent sans limites. Notes de sangria, de rose et de cuir.", "1_million.jpg", 106.89),
+        (NULL, "J'adore", 2, 2, 2, 2, "Un parfum floral et ensoleillé, symbole de féminité et de grâce. Notes de jasmin, de rose et de ylang-ylang.", "j_adore.jpg", 85),
+        (NULL, "Light Blue", 1, 3, 14, 2, "Un parfum frais et lumineux, inspiré par la Méditerranée. Notes de citron, de pomme et de cèdre.", "light_blue.jpg", 120),
+        (NULL, "La Vie Est Belle", 1, 2, 13, 2, "Un parfum gourmand et optimiste, célébrant le bonheur de vivre. Notes de patchouli, d'iris et de vanille.", "la_vie_est_belle.jpg", 160),
+        (NULL, "Acqua di Gio", 1, 1, 5, 2, "Un parfum aquatique et rafraîchissant, inspiré par la mer Méditerranée. Notes de bergamote, de jasmin et de bois de santal.", "acqua_di_gio.jpg", 95),
+        (NULL, "Le Male", 1, 1, 6, 2, "Un parfum iconique et viril, pour l'homme moderne et séduisant. Notes de lavande, de vanille et de menthe.", "le_male.jpg", 100),
+        (NULL, "Black Orchid", 1, 2, 7, 2, "Un parfum intense et mystérieux, pour les femmes qui osent être différentes. Notes de truffe, d'orchidée noire et de patchouli.", "black_orchid.jpg", 150),
+        (NULL, "Good Girl", 1, 2, 15, 2, "Un parfum audacieux et sensuel, pour la femme qui sait ce qu'elle veut. Notes de café, de tubéreuse et de vanille.", "good_girl.jpg", 110),
+        (NULL, "Aventus", 1, 1, 9, 2, "Un parfum légendaire et puissant, pour les hommes qui dominent le monde. Notes d'ananas, de bouleau et de musc.", "aventus.jpg", 300),
+        (NULL, "Green Tea", 1, 3, 16, 3, "Un parfum frais et naturel, inspiré par la sérénité du thé vert. Notes de thé vert, de citron et de fleurs blanches.", "green_tea.jpg", 30),
+        (NULL, "Citrus Splash", 1, 3, 17, 3, "Un parfum énergisant et pétillant, parfait pour un regain de vitalité. Notes de citron, de mandarine et de bergamote.", "citrus_splash.jpg", 25);
     '''
     mycursor.execute(sql)
 
@@ -201,47 +219,52 @@ def fct_fixtures_load():
         id_declinaison_parfum INT AUTO_INCREMENT,
         id_parfum INT,
         stock INT,
-        prix_declinaison DECIMAL(10,2),
         volume_id INT,
+        couleur_id INT,
         PRIMARY KEY (id_declinaison_parfum, id_parfum),
         FOREIGN KEY (id_parfum) REFERENCES parfum(id_parfum),
-        FOREIGN KEY (volume_id) REFERENCES volume(id_volume)
+        FOREIGN KEY (volume_id) REFERENCES volume(id_volume),
+        FOREIGN KEY (couleur_id) REFERENCES couleur(id_couleur)
     );
+    '''
+    mycursor.execute(sql)
+    sql = '''
+    INSERT INTO declinaison_parfum (id_parfum, stock, volume_id, couleur_id) VALUES
+        (1, 84, 3, 3),
+        (1, 0, 5, 3),
+        (1, 113, 4, 2),
+        (2, 69, 2, 1),
+        (3, 97, 1, 1),
+        (4, 25, 3, 1),
+        (5, 87, 1, 1),
+        (6, 64, 4, 1),
+        (7, 65, 4, 4),
+        (8, 57, 4, 1),
+        (9, 111, 2, 1),
+        (10, 102, 3, 1),
+        (11, 19, 1, 1),
+        (12, 0, 2, 1),
+        (13, 1, 2, 3),
+        (14, 26, 5, 1),
+        (15, 37, 2, 1),
+        (16, 48, 6, 1),
+        (17, 59, 4, 1),
+        (18, 70, 2, 1),
+        (19, 81, 7, 4),
+        (19, 81, 5, 4),
+        (19, 81, 3, 2),
+        (19, 81, 7, 2),
+        (20, 92, 4, 1),
+        (21, 3, 5, 1),
+        (22, 4, 6, 1),
+        (23, 5, 4, 1),
+        (24, 6, 8, 1),
+        (25, 7, 4, 1),
+        (26, 8, 4, 1);
     '''
     mycursor.execute(sql)
 
     sql = '''
-    INSERT INTO declinaison_parfum (id_parfum, stock, prix_declinaison, volume_id) VALUES
-        (1, 84, 10, 3),
-        (2, 69, 9.98, 2),
-        (3, 97, 10, 1),
-        (4, 25, 15, 3),
-        (5, 87, 5, 1),
-        (6, 64, 60, 4),
-        (7, 65, 95, 4),
-        (8, 57, 170, 4),
-        (9, 111, 90, 2),
-        (10, 102, 60, 3),
-        (11, 19, 90, 1),
-        (12, 0, 54, 2),
-        (13, 1, 74, 2),
-        (14, 26, 104.99, 5),
-        (15, 37, 116, 2),
-        (16, 48, 106.89, 6),
-        (17, 59, 120, 4),
-        (18, 70, 85, 2),
-        (19, 81, 160, 7),
-        (20, 92, 95, 4),
-        (21, 3, 100, 5),
-        (22, 4, 150, 6),
-        (23, 5, 110, 4),
-        (24, 6, 300, 8),
-        (25, 7, 30, 4),
-        (26, 8, 25, 4);
-    '''
-    mycursor.execute(sql)
-
-    sql = ''' 
     CREATE TABLE commande(
         id_commande INT AUTO_INCREMENT PRIMARY KEY,
         date_achat DATE,
@@ -249,18 +272,18 @@ def fct_fixtures_load():
         id_etat INT,
         FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur),
         FOREIGN KEY (id_etat) REFERENCES etat(id_etat)
-    ) DEFAULT CHARSET=utf8;  
-     '''
+    ) DEFAULT CHARSET=utf8;
+    '''
     mycursor.execute(sql)
-    sql = ''' 
-    INSERT INTO commande VALUE 
-        (Null,"2021-06-01",2,1), 
-        (Null,"2021-06-02",2,2), 
-        (Null,"2021-06-03",3,1);
+    sql = '''
+    INSERT INTO commande VALUE
+        (Null,"2021-06-01",3,1),
+        (Null,"2021-06-02",3,2),
+        (Null,"2021-06-03",2,1);
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE ligne_commande(
         id_commande INT,
         declinaison_id INT,
@@ -271,15 +294,15 @@ def fct_fixtures_load():
     );
     '''
     mycursor.execute(sql)
-    sql = ''' 
-    INSERT INTO ligne_commande VALUES 
+    sql = '''
+    INSERT INTO ligne_commande VALUES
         (1,1,10,1),
         (2,2,10,1),
         (3,3,15,1);
     '''
     mycursor.execute(sql)
 
-    sql = ''' 
+    sql = '''
     CREATE TABLE ligne_panier(
         utilisateur_id INT,
         declinaison_id INT,
@@ -290,6 +313,5 @@ def fct_fixtures_load():
     );
     '''
     mycursor.execute(sql)
-
     get_db().commit()
     return redirect("/")

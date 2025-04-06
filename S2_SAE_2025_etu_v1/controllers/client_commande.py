@@ -92,7 +92,7 @@ def client_commande_show():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     sql = '''  
-    SELECT commande.id_commande, commande.id_etat, etat.libelle_etat, date_achat, SUM(prix_parfum * quantite) AS prix_total, SUM(quantite) AS nbr_articles
+    SELECT commande.id_commande, commande.id_etat, etat.libelle_etat, date_achat, SUM(prix * quantite) AS prix_total, SUM(quantite) AS nbr_articles, SUM(prix)
     FROM commande 
     JOIN ligne_commande ON commande.id_commande = ligne_commande.id_commande 
     JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
@@ -108,22 +108,20 @@ def client_commande_show():
     articles_commande = None
     commande_adresses = None
     id_commande = request.args.get('id_commande', None)
-    if id_commande != None:
-        print(id_commande)
+    if id_commande is not None:
         sql = '''
-        SELECT nom_parfum, nom_volume, prix_parfum, quantite, SUM(quantite * prix_parfum) AS prix_ligne,
+        SELECT nom_parfum, nom_volume, prix_parfum, quantite, SUM(quantite * prix) AS prix_ligne, prix, libelle,
        (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_dec
         FROM ligne_commande
             JOIN declinaison_parfum ON ligne_commande.declinaison_id = declinaison_parfum.id_declinaison_parfum
             JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
             JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
+            JOIN couleur ON declinaison_parfum.couleur_id = couleur.id_couleur
         WHERE id_commande = %s
-        GROUP BY nom_parfum, prix_parfum, quantite, nom_volume, nb_dec
+        GROUP BY nom_parfum, prix_parfum, quantite, nom_volume, nb_dec, prix, libelle
         '''
         mycursor.execute(sql, id_commande)
         articles_commande = mycursor.fetchall()
-        # partie 2 : selection de l'adresse de livraison et de facturation de la commande selectionnée
-        sql = ''' selection des adressses '''
 
     return render_template('client/commandes/show.html'
                            , commandes=commandes
