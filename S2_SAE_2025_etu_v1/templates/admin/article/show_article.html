@@ -22,7 +22,7 @@ articles (tableau de dictionnaires)
     <thead class="thead-dark">
         <tr>
             <th>nom</th><th>id</th><th>type article (id)</th><th>prix</th><th style="color: green">stock</th>
-            <th>nouveaux avis</th><th>nb déclinaisons</th><th>image</th><th>opération</th>
+            <th>nb déclinaisons</th><th>image</th><th>opération</th>
         </tr>
     </thead>
     <tbody>
@@ -49,17 +49,6 @@ articles (tableau de dictionnaires)
                      {% endif %}
                   {% else %}
                       ND
-                  {% endif %}
-                  </td>
-                   <td>
-                  {% if ligne.nb_commentaires_nouveaux is defined %}
-                     {% if ligne.nb_commentaires_nouveaux > 0 %}
-                         <a href="/admin/article/commentaires?id_article={{ ligne.id_article }}"><strong style="color: red">{{ ligne.nb_commentaires_nouveaux }} avis non lu(s) ⚠️ </strong></a>
-                     {% else %}
-                        <strong class="text-muted"></strong>
-                     {% endif %}
-                  {% else %}
-                      nb_avis ND
                   {% endif %}
                   </td>
 

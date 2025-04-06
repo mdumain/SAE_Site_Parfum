@@ -93,12 +93,12 @@ def client_article_show():                                 # remplace client_ind
 
 
     articles_panier = []
-    sql = '''SELECT *, CONCAT(parfum.nom_parfum, ' (', volume.nom_volume, ')') AS nom 
+    sql = '''SELECT *
     FROM ligne_panier JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
     JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
-    JOIN volume ON declinaison_parfum.volume_id = volume.id_volume
+    WHERE utilisateur_id = %s
     '''
-    mycursor.execute(sql)
+    mycursor.execute(sql, id_client)
     articles_panier = mycursor.fetchall()
 
 
@@ -106,11 +106,11 @@ def client_article_show():                                 # remplace client_ind
         sql = ''' 
         SELECT SUM(prix_parfum * quantite) AS prix_total
         FROM ligne_panier 
-            JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum
-            JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum 
+        JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum
+        JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum 
         WHERE utilisateur_id = %s 
         '''
-        mycursor.execute(sql, (id_client))
+        mycursor.execute(sql, id_client)
         prix_total = mycursor.fetchone()['prix_total']
     else:
         prix_total = None

@@ -65,14 +65,12 @@ types_article : tableau de dictionnaires
                     <table class="table table-hover table-responsive">
 
                         <th style="width: 300px">volume</th>
-                        <th style="width: 300px">couleur</th>
                         <th style="width: 300px">stock</th>
                         <th style="width: 300px">opérations</th>
 
                         {% if declinaisons_article | length == 0 %}
                             <tr>
                                 <td>Aucun modèle</td>
-                                <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -82,17 +80,14 @@ types_article : tableau de dictionnaires
                                     <td>
                                         {{ declinaison_article.nom_volume }}
                                     </td>
-                                    <td>
-                                        {{ declinaison_article.libelle_couleur }}
-                                    </td>
                                     <td>{{ declinaison_article.stock }}</td>
                                     <td style="display: flex">
-                                        <a class="img-fluid" href="/admin/declinaison_article/delete?id_declinaison_article={{ declinaison_article.id_declinaison_article }}&amp;id_article={{ declinaison_article.article_id }}">
+                                        <a class="img-fluid" href="/admin/declinaison_article/delete?id_declinaison_article={{ declinaison_article.id_declinaison_parfum }}&amp;id_article={{ declinaison_article.id_parfum }}">
                                             <button class="btn btn-primary mx-1">
                                                 supprimer
                                             </button>
                                         </a>
-                                        <a class="img-fluid" href="/admin/declinaison_article/edit?id_declinaison_article={{ declinaison_article.id_declinaison_article }}">
+                                        <a class="img-fluid" href="/admin/declinaison_article/edit?id_declinaison_article={{ declinaison_article.id_declinaison_parfum }}">
                                             <button class="btn btn-primary mx-1">
                                                 editer
                                             </button>

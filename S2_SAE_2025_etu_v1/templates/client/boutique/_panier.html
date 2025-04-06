@@ -11,7 +11,7 @@
                     </tr>
                     {% for item_panier in articles_panier %}
                         <tr>
-                            <td>{{item_panier.nom}}
+                            <td>{{item_panier.nom_parfum}}
                             {% if item_panier.id_couleur is defined and item_panier.id_couleur != None and item_panier.id_couleur >1 %}
                                 <small style="color: #6dcea2">({{ item_panier.libelle_couleur }})</small>
                             {% endif %}
@@ -20,8 +20,8 @@
                             {% endif %}
                             </td>
                             <td>{{item_panier.quantite}}</td>
-                            <td>{{item_panier.prix_declinaison}}</td>
-                            <td>{{ "{:,.2f} €".format((item_panier.prix_declinaison * item_panier.quantite)) }}{#{(panier.article.prix * panier.quantite)|number_format(2) }#}</td>
+                            <td>{{item_panier.prix_parfum}}</td>
+                            <td>{{ "{:,.2f} €".format((item_panier.prix_parfum * item_panier.quantite)) }}{#{(panier.article.prix * panier.quantite)|number_format(2) }#}</td>
                             <td>
 {# #}                            {% if item_panier.stock is defined %}
 {# #}                               {% if item_panier.stock > 0 %}

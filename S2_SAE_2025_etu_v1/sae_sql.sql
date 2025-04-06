@@ -220,3 +220,10 @@ CREATE TABLE ligne_panier(
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     FOREIGN KEY (declinaison_id) REFERENCES declinaison_parfum(id_declinaison_parfum)
 );
+
+SELECT CONCAT(nom_parfum, ' ', nom_volume) AS label, SUM(stock * parfum.prix_parfum) AS value
+FROM parfum
+JOIN declinaison_parfum dp on parfum.id_parfum = dp.id_parfum
+JOIN volume v on dp.volume_id = v.id_volume
+GROUP BY nom_parfum, nom_volume
+ORDER BY nom_parfum;

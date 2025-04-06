@@ -14,8 +14,13 @@ client_commande = Blueprint('client_commande', __name__,
 def client_commande_valide():
     mycursor = get_db().cursor()
     id_client = session['id_user']
-    sql = '''SELECT * FROM ligne_panier JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum'''
-    mycursor.execute(sql)
+    sql = '''
+    SELECT * FROM ligne_panier 
+    JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum
+    JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
+    WHERE utilisateur_id = %s
+    '''
+    mycursor.execute(sql, id_client)
     articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:
@@ -50,7 +55,8 @@ def client_commande_add():
     sql = '''
     SELECT * 
     FROM ligne_panier 
-    JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum 
+    JOIN declinaison_parfum ON ligne_panier.declinaison_id = declinaison_parfum.id_declinaison_parfum
+    JOIN parfum ON declinaison_parfum.id_parfum = parfum.id_parfum
     WHERE utilisateur_id = %s'''
     mycursor.execute(sql, id_client)
     items_ligne_panier = mycursor.fetchall()
@@ -72,7 +78,7 @@ def client_commande_add():
         sql = '''DELETE FROM ligne_panier WHERE utilisateur_id = %s AND declinaison_id = %s'''
         mycursor.execute(sql, (id_client, item['declinaison_id']))
         sql = '''INSERT INTO ligne_commande VALUE (%s, %s, %s, %s)'''
-        mycursor.execute(sql, (last_insert_id, item['declinaison_id'], item['prix_declinaison'], item['quantite']))
+        mycursor.execute(sql, (last_insert_id, item['declinaison_id'], item['prix_parfum'], item['quantite']))
 
     get_db().commit()
     flash(u'Commande ajoutée','alert-success')

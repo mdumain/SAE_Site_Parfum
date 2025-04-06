@@ -42,7 +42,7 @@ def client_panier_add():
     sql = '''SELECT stock FROM declinaison_parfum WHERE id_declinaison_parfum = %s'''
     mycursor.execute(sql, id_declinaison_article)
     stock = mycursor.fetchone()["stock"]
-    if (stock <= 0):
+    if stock <= 0:
         flash("Article plus disponible")
         return redirect("/client/article/show")
 

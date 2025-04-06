@@ -21,8 +21,8 @@ def show_article():
     sql = '''  SELECT parfum.nom_parfum AS nom, parfum.id_parfum AS id_article, genre.nom_genre AS libelle, parfum.genre_id AS type_article_id ,prix_parfum AS prix, SUM(stock) AS stock, parfum.image AS image,
      (SELECT COUNT(declinaison_parfum.id_declinaison_parfum) FROM declinaison_parfum WHERE declinaison_parfum.id_parfum = parfum.id_parfum) AS nb_declinaisons
     FROM parfum
-    JOIN genre ON parfum.genre_id = genre.id_genre
-    JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
+    LEFT JOIN genre ON parfum.genre_id = genre.id_genre
+    LEFT JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum
     GROUP BY parfum.nom_parfum, parfum.id_parfum, genre.nom_genre, parfum.genre_id, prix_parfum, parfum.image 
     ORDER BY parfum.nom_parfum;
     '''
@@ -46,7 +46,6 @@ def add_article():
     return render_template('admin/article/add_article.html'
                            ,types_article=type_article
                            ,volumes=volumes
-                           #,tailles=tailles
                             )
 
 
@@ -94,24 +93,32 @@ def valid_add_article():
 def delete_article():
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
-    sql = ''' SELECT COUNT(id_declinaison_parfum) FROM parfum JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum GROUP BY parfum.id_parfum '''
+    sql = '''
+    SELECT COUNT(id_declinaison_parfum) AS nb_declinaison
+    FROM parfum JOIN declinaison_parfum ON parfum.id_parfum = declinaison_parfum.id_parfum 
+    WHERE parfum.id_parfum = %s
+    GROUP BY parfum.id_parfum 
+    '''
     mycursor.execute(sql, id_article)
     nb_declinaison = mycursor.fetchone()
 
-    if nb_declinaison['nb_declinaison'] > 0:
+    if nb_declinaison is not None:
         message= u'il y a des declinaisons dans cet article : vous ne pouvez pas le supprimer'
         flash(message, 'alert-warning')
     else:
+        """
         sql = ''' SELECT * from parfum WHERE id_parfum = %s '''
         mycursor.execute(sql, id_article)
-        article = mycursor.fetchone()
-        image = request.files.get('image')
+        image = mycursor.fetchone()['image']
+        """
 
         sql = ''' DELETE FROM parfum WHERE parfum.id_parfum =%s  '''
         mycursor.execute(sql, id_article)
         get_db().commit()
-        if image != None:
+        """
+        if image is not None:
             os.remove('/home/sae345g14/sae2.345suj14/S2_SAE_2025_etu_v1/static/images/' + image)
+        """
         message = u'un article supprimé, id : ' + id_article
         flash(message, 'alert-success')
 

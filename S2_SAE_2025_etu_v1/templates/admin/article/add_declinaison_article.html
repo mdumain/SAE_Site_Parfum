@@ -12,7 +12,7 @@
     {% endif %}
         <div class="w-25">
             <form class="w-190" method="post" action="/admin/declinaison_article/add">
-                <input id="id_article" type="hidden" name="id_article" value="{{ article.id_article }}">
+                <input id="id_article" type="hidden" name="id_article" value="{{ article.id_parfum }}">
                 <label for="stock">stock :
                     <input name="stock" id="stock" type="number" class="form-control" required>
                 </label>
@@ -20,24 +20,11 @@
                     <div>!</div><div><strong>Une couleur unique est définie </strong></div>
                     <input type="hidden" name="couleur" value="1">
                 {% else %}
-                <label for="couleur">Couleur :
-                    <select name="couleur" required class="form-select">
-                        <option value="">Sélectionner une couleur</option>
-                        {% for couleur in couleurs %}
-                             <option value="{{ couleur.id_couleur }}"> {{ couleur.libelle }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-                {% endif %}
-                {% if  d_taille_uniq is defined and  d_taille_uniq==1 %}
-                    <div>!</div><div><strong>Une taille unique est définie </strong></div>
-                    <input type="hidden" name="taille" value="1">
-                {% else %}
-                <label for="taille">Taille :
-                    <select id="taille" name="taille" required class="form-select">
-                        <option value="">Sélectionner une taille</option>
-                        {% for taille in tailles %}
-                            <option value="{{ taille.id_taille }}"> {{ taille.libelle }}</option>
+                <label for="volume">Volume :
+                    <select name="volume" required class="form-select">
+                        <option value="">Sélectionner un volume</option>
+                        {% for volume in volumes %}
+                             <option value="{{ volume.id_volume }}"> {{ volume.nom_volume }}</option>
                         {% endfor %}
                     </select>
                 </label>
@@ -47,7 +34,7 @@
                 </label>
 
             </form>
-         <a href="/admin/article/edit?id_article={{ article.id_article }}"><button class="btn btn-secondary mt-2">annuler</button></a>
+         <a href="/admin/article/edit?id_article={{ article.id_parfum }}"><button class="btn btn-secondary mt-2">annuler</button></a>
         </div>
     </div>
 {% endblock %}
